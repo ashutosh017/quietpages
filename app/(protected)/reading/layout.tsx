@@ -9,7 +9,9 @@ export default async function layout({
   // const token = await getToken();
   // console.log("token: ",token);
 
-  return <ClerkProvider>
-    <div>{children}</div>;
-  </ClerkProvider>
+  return (
+    <ClerkProvider>
+      <div>{children}</div>
+    </ClerkProvider>
+  );
 }

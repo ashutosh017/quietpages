@@ -1,14 +1,20 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { useUser } from "@clerk/nextjs";
+import axios from "axios";
 import { useId, useState } from "react";
 
 export default function Page() {
   const titleId = useId();
   const contentId = useId();
   const mediaUploadId = useId();
+  const { user } = useUser();
+  const userId = user?.id;
+  const [loading, setLoading] = useState(false)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true)
     const formData = new FormData(e.currentTarget);
     const title = formData.get("Blog Title");
     const content = formData.get("Blog Content");
@@ -16,7 +22,18 @@ export default function Page() {
     console.log("Title:", title);
     console.log("Content:", content);
     console.log("Media:", media);
-    
+    try {
+      const res = await axios.post("/api/v1/blogs", {
+        title,
+        content,
+        userId,
+        images: [],
+      });
+      console.log("blog created: ", res.data);
+    } catch (error) {
+      console.log("erro creating blog");
+    }
+    setLoading(false)
   };
   const [fileCount, setFileCount] = useState(0);
 
@@ -49,34 +66,39 @@ export default function Page() {
           name="Blog Content"
           className="border h-40 text-lg font-semibold px-4 py-2"
         />
-      <div className="flex items-center">  <Button
-          asChild
-          variant="link"
-          className="hover:no-underline text-blue-400 font-bold text-lg "
-        >
-          <label htmlFor={mediaUploadId} className="cursor-pointer">
-            + Add Media
-            <input
-              name="Media Upload"
-              id={mediaUploadId}
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleChange}
-              className="sr-only"
-            />
-          </label>
-        </Button>
-        {fileCount > 0 && (
-        <p className="text-sm text-gray-500">{fileCount} file{fileCount > 1 ? 's' : ''} selected</p>
-      )}
-      </div>
+        <div className="flex items-center">
+          {" "}
+          <Button
+            asChild
+            variant="link"
+            className="hover:no-underline text-blue-400 font-bold text-lg "
+          >
+            <label htmlFor={mediaUploadId} className="cursor-pointer">
+              + Add Media
+              <input
+                name="Media Upload"
+                id={mediaUploadId}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleChange}
+                className="sr-only"
+              />
+            </label>
+          </Button>
+          {fileCount > 0 && (
+            <p className="text-sm text-gray-500">
+              {fileCount} file{fileCount > 1 ? "s" : ""} selected
+            </p>
+          )}
+        </div>
         <Button
           variant="secondary"
+          disabled={loading}
           className=" text-lg font-semibold"
           type="submit"
         >
-          Publish
+          {loading?"Publishing...":"Publish"}
         </Button>
       </form>
     </div>

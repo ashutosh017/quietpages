@@ -1,0 +1,16 @@
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  blogs     Blog[]
+}
+
+model Blog {
+  id      String   @id @default(cuid())
+  title   String
+  content String
+  images   String[] @default([])
+  userId  String
+  user    User     @relation(fields: [userId], references: [id])
+}

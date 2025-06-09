@@ -1,5 +1,5 @@
 // lib/clerkAuth.ts
-import { clerkClient, verifyToken } from "@clerk/nextjs/server";
+import { verifyToken } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 export async function verifyClerkToken(authorizationHeader?: string) {
