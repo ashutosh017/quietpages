@@ -10,7 +10,7 @@ export default function Home() {
       </h1>
       <div className="flex  space-x-2 items-center lg:space-x-8 ">
         <Button variant={"secondary"} asChild className="mt-8 font-bold lg:text-2xl lg:p-6 ">
-          <Link href="/reading">Start Reading</Link>
+          <Link href="/blogs">Start Reading</Link>
         </Button>
         <Button variant={"secondary"} asChild className="mt-8 font-bold lg:text-2xl lg:p-6">
           <Link href="/writing">Start Writing</Link>

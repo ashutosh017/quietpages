@@ -13,28 +13,54 @@ export default function Page() {
   const userId = user?.id;
   const [loading, setLoading] = useState(false)
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true)
-    const formData = new FormData(e.currentTarget);
-    const title = formData.get("Blog Title");
-    const content = formData.get("Blog Content");
-    const media = formData.getAll("Media Upload");
-    console.log("Title:", title);
-    console.log("Content:", content);
-    console.log("Media:", media);
-    try {
-      const res = await axios.post("/api/v1/blogs", {
-        title,
-        content,
-        userId,
-        images: [],
-      });
-      console.log("blog created: ", res.data);
-    } catch (error) {
-      console.log("erro creating blog");
+  e.preventDefault();
+  setLoading(true);
+
+  const formData = new FormData(e.currentTarget);
+  const title = formData.get("Blog Title");
+  const content = formData.get("Blog Content");
+  const media = formData.getAll("Media Upload") as File[];
+
+  const uploadedImageUrls: string[] = [];
+
+  try {
+    // Upload images to Cloudinary
+    const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET;
+    const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+    if(!cloudinaryPreset || !cloudinaryCloudName){
+      return;
     }
-    setLoading(false)
-  };
+    for (const file of media) {
+      const imageFormData = new FormData();
+      imageFormData.append("file", file);
+      
+      imageFormData.append("upload_preset",cloudinaryPreset ); // unsigned preset
+      imageFormData.append("cloud_name", cloudinaryCloudName);
+
+      const cloudinaryRes = await axios.post(
+        `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
+        imageFormData
+      );
+
+      uploadedImageUrls.push(cloudinaryRes.data.secure_url);
+    }
+
+    // Send blog creation request with uploaded image URLs
+    const res = await axios.post("/api/v1/blogs", {
+      title,
+      content,
+      userId,
+      images: uploadedImageUrls,
+    });
+
+    console.log("blog created: ", res.data);
+  } catch (error) {
+    console.error("Error creating blog", error);
+  }
+
+  setLoading(false);
+};
+
   const [fileCount, setFileCount] = useState(0);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
