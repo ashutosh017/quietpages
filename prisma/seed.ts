@@ -1,4 +1,4 @@
-import { prisma } from "../db/src/index";
+import {prisma} from '../lib/prisma'
 const blogs = [
   {
     title: "Getting Started with Next.js 15",

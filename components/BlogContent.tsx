@@ -24,7 +24,7 @@ import { useRouter } from "next/router";
 import { DeleteConfirmation } from "./delete-confirmation";
 import { BlogForm } from "./blog-form";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { handleUpdateBlog } from "@/actions";
+import { handleDeleteBlog, handleUpdateBlog } from "@/actions";
 
 export default function BlogPage({ blog }: { blog: Blog }) {
   const { isSignedIn } = useAuth();
@@ -41,15 +41,15 @@ export default function BlogPage({ blog }: { blog: Blog }) {
   console.log("userId: ",blog.userId)
 
   return (
-    <div className="container mx-auto px-4 py-24 max-w-2xl">
-      <div className="mb-8">
+    <div className="container min-h-screen  mx-auto px-4 py-24 max-w-2xl">
+      <div className="mb-4">
         <div className="flex items-center justify-between mb-8">
-          <Link href="/">
-            <Button variant="ghost" size="sm" className="-ml-3">
+            <Button onClick={()=>{
+              window.history.back()
+            }} variant="ghost" size="sm" className="-ml-3">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>
-          </Link>
           {isSignedIn && user?.id === blog.userId && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -95,7 +95,7 @@ export default function BlogPage({ blog }: { blog: Blog }) {
       </div>
 
       <article className="prose prose-neutral max-w-none">
-        <p className="text-foreground leading-relaxed text-base">
+        <p className="text-foreground leading-relaxed text-base whitespace-pre-line">
           {blog?.content}
         </p>
       </article>
@@ -130,12 +130,12 @@ export default function BlogPage({ blog }: { blog: Blog }) {
       )}
 
       <div className="mt-12 pt-8 border-t border-border/40">
-        <Link href="/blogs">
-          <Button variant="ghost" size="sm">
+          <Button onClick={()=>
+            window.history.back()
+          } variant="ghost" size="sm">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to all posts
           </Button>
-        </Link>
       </div>
       {lightboxOpen && blog && blog.images && (
         <ImageLightbox
@@ -158,7 +158,10 @@ export default function BlogPage({ blog }: { blog: Blog }) {
       <DeleteConfirmation
         isOpen={showDeleteDialog}
         onClose={() => setShowDeleteDialog(false)}
-        onConfirm={() => {}}
+        onConfirm={()=>{
+          handleDeleteBlog(blog.id)
+          setShowDeleteDialog(false)
+        }}
         title={blog.title}
       />
     </div>

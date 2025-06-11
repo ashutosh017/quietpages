@@ -10,6 +10,7 @@ import { handleCreateBlog } from "@/actions";
 import AuthRequiredPopUp from "@/components/auth-required-popup";
 import { useState } from "react";
 import { Blog } from "@/lib/generated/prisma";
+import { EmptyState } from "./EmptyState";
 
 function truncateContent(content: string, wordLimit = 20): string {
   const words = content.split(" ");
@@ -22,11 +23,33 @@ export default  function BlogsPage({blogs}:{blogs:Blog[]}) {
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showAuthRequiredPopup, setShowAuthRequiredPopup] = useState(false);
 
+if(blogs.length===0){
+    return   <div className="min-h-screen flex items-center justify-center border border-border/40 rounded-lg mb-8">
+          <EmptyState
+            title="No blog posts yet"
+            description="Create your first blog post to get started. Your blog posts will appear here."
+            actionLabel="Create Your First Blog"
+            onAction={() => {
+                 isSignedIn
+              ? setShowCreateForm(true)
+              : setShowAuthRequiredPopup(true);
+            }}
+          />
+           <BlogForm
+          isOpen={showCreateForm}
+          onClose={() => setShowCreateForm(false)}
+          onSave={handleCreateBlog}
+          mode={{
+            type:"create",
+            blogId:null
+          }}
+        />
 
+        </div>
+}
 
   return (
-    <div className="container mx-auto px-4 py-24 max-w-4xl">
-      {/* {isSignedIn && */}
+    <div className="container min-h-screen mx-auto px-4 py-24 max-w-4xl">
       <div className="mb-6">
         <Button
           className=""
@@ -38,19 +61,17 @@ export default  function BlogsPage({blogs}:{blogs:Blog[]}) {
           asChild
           variant={"outline"}
         >
-          {/* <Link href={"/create-blog"} className=""><Plus className=""/> Create One</Link> */}
-         <div>
+         <div className="">
              <Plus /> Create One
          </div>
         </Button>
       </div>
-      {/* } */}
 
       <div className="flex space-y-4 flex-col">
         {blogs.map((blog) => (
           <Link key={blog.id} href={`/blog/${blog.id}`}>
             <Card className="group border border-border/40 hover:border-border hover:shadow-sm transition-all duration-200 cursor-pointer bg-card/50 hover:bg-card">
-              <CardHeader className="pb-4">
+              <CardHeader className="">
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-xl font-medium leading-relaxed group-hover:text-primary transition-colors flex-1 pr-4">
                     {blog.title}

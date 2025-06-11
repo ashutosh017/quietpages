@@ -6,7 +6,15 @@ import { useAuth, useUser } from "@clerk/nextjs"
 import { currentUser, getAuth } from "@clerk/nextjs/server";
 
 export default async function page(){
+  const user = await currentUser()
 
-  return <div></div>
+  const blogs = await prisma.blog.findMany({
+    where:{
+      userId:user?.id
+    }
+  })
+  console.log("my blogs: ",blogs)
+
+  return <BlogsPage blogs={blogs}/>
 
 }

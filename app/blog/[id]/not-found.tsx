@@ -7,7 +7,7 @@ import { ArrowLeft, FileX } from "lucide-react"
 
 export default function NotFound() {
   return (
-    <div className="container mx-auto px-4 py-16 flex items-center justify-center min-h-[60vh]">
+    <div className="container mx-auto px-4 py-16 flex items-center justify-center min-h-screen">
       <Card className="w-full max-w-md text-center">
         <CardHeader>
           <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-muted flex items-center justify-center">

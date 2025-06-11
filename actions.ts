@@ -8,18 +8,17 @@ import {
 } from "./config";
 import { Blog, Mode } from "./types";
 import crypto from "crypto";
-import { prisma } from "./db/src";
-import { clerkClient } from "@clerk/nextjs/server";
+import { prisma } from "./lib/prisma";
 
 export const handleCreateBlog = async (
   blog: Omit<Blog, "id" | "dateCreated">,
   mode: Mode
 ) => {
   try {
-    console.log(blog)
+    console.log(blog);
     const res = await prisma.blog.create({
       data: {
-        ...blog
+        ...blog,
       },
     });
     return {
@@ -27,7 +26,7 @@ export const handleCreateBlog = async (
       res,
     };
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return {
       msg: "error occured while creating blog",
       error,
@@ -62,9 +61,61 @@ export const handleUpdateBlog = async (
     };
   }
 };
+
+export const handleDeleteBlog = async (id: string) => {
+  try {
+    const blog = await prisma.blog.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!blog) {
+      return {
+        msg: "blog not found",
+      };
+    }
+    const imageUrls = blog.images;
+    const publicIds = imageUrls.map((url) => {
+      const parts = url.split("/");
+      const uploadIndex = parts.indexOf("upload");
+      const publicIdParts = parts.slice(uploadIndex + 1);
+
+      if (publicIdParts[0].match(/^v\d+$/)) {
+        publicIdParts.shift();
+      }
+
+      return publicIdParts.join("/").replace(/\.[^/.]+$/, "");
+    });
+
+    if (publicIds.length > 0) {
+      Promise.all(
+        publicIds.map((publicId) => {
+          return deleteImageFromCloudinary(publicId);
+        })
+      ).catch((err) => {
+        console.error("Error deleting images:", err);
+      });
+    }
+    const res = await prisma.blog.delete({
+      where: {
+        id,
+      },
+    });
+    return {
+      msg: "blog deleted successfully",
+      res,
+    };
+  } catch (error) {
+    return {
+      msg: "error deleting blog",
+      error,
+    };
+  }
+};
+
 export const deleteImageFromCloudinary = async (
-  assetId: string,
-  publicId: string
+  publicId: string,
+  assetId?: string
 ) => {
   console.log("delete image called");
   if (!cloudinaryApiKey || !cloudinaryApiKey || !cloudinaryCloudName) {
@@ -84,7 +135,7 @@ export const deleteImageFromCloudinary = async (
   const payload = {
     signature,
     public_id: publicId,
-    asset_id: assetId,
+    // asset_id: assetId,
     api_key: cloudinaryApiKey,
     timestamp,
   };
@@ -92,18 +143,17 @@ export const deleteImageFromCloudinary = async (
   try {
     const response = await axios.post(
       `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/destroy`,
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
+      payload
+      //   {
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //   }
     );
     console.log(response.data);
 
     return response.data; // { result: "ok" } or { result: "not found" }
   } catch (error: any) {
     console.error("Cloudinary deletion failed", error.response?.data || error);
-    throw new Error("Failed to delete asset from Cloudinary");
   }
 };

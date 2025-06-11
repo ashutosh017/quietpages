@@ -33,3 +33,10 @@ export interface SelectedImage {
   url: string;
   file?: File;
 }
+
+export interface DeleteConfirmationProps {
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+  title: string
+}

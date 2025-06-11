@@ -9,16 +9,12 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog"
+import { DeleteConfirmationProps } from "@/types"
 import { AlertTriangle } from "lucide-react"
 
-interface DeleteConfirmationProps {
-  isOpen: boolean
-  onClose: () => void
-  onConfirm: () => void
-  title: string
-}
 
-export function DeleteConfirmation({ isOpen, onClose, onConfirm, title }: DeleteConfirmationProps) {
+
+export function DeleteConfirmation({ isOpen, onClose, onConfirm, title}: DeleteConfirmationProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">

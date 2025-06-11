@@ -6,6 +6,9 @@
 .LabelStyle{
   @apply text-xl lg:text-2xl font-semibold
 }
+.nav-btn-style{
+  @apply cursor-default px-4  rounded-xl 
+}
 
 @theme inline {
   --color-background: var(--background);
