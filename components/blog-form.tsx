@@ -16,27 +16,14 @@ import {
 } from "@/components/ui/dialog";
 import { X, Upload, Plus } from "lucide-react";
 import Image from "next/image";
-import { Blog } from "@/types";
+import { Blog, BlogFormProps, SelectedImage } from "@/types";
 import axios from "axios";
 import { deleteImageFromCloudinary } from "@/actions";
+import { useUser } from "@clerk/nextjs";
 
 const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET;
 const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-interface BlogFormProps {
-  blog?: Blog;
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (blog: Omit<Blog, "id">) => void;
-  mode: "create" | "edit";
-}
-
-interface SelectedImage {
-  assetId:string,
-  publicId:string,
-  url: string;
-  file?: File;
-}
 
 export function BlogForm({
   blog,
@@ -49,6 +36,7 @@ export function BlogForm({
     title: blog?.title || "",
     content: blog?.content || "",
   });
+  const {user} = useUser()
 
   const [selectedImages, setSelectedImages] = useState<SelectedImage[]>(
     blog?.images?.map((url, index) => ({
@@ -67,13 +55,12 @@ export function BlogForm({
       selectedImages.length > 0 ? selectedImages.map((img) => img.url) : [];
 
     onSave({
-      userId: blog?.userId!,
+      userId: user?.id!,
       title: formData.title,
       content: formData.content,
-      author: blog?.author!, 
-      dateCreated: blog?.dateCreated || new Date().toISOString().split("T")[0],
+      author: user?.fullName ?? "anonymous", 
       images,
-    });
+    },mode);
 
     setFormData({ title: "", content: "" });
     setSelectedImages([]);
@@ -138,7 +125,7 @@ export function BlogForm({
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {mode === "create" ? "Create New Blog" : "Edit Blog"}
+            {mode.type === "create" ? "Create New Blog" : "Edit Blog"}
           </DialogTitle>
         </DialogHeader>
 
@@ -253,7 +240,7 @@ export function BlogForm({
               Cancel
             </Button>
             <Button type="submit">
-              {mode === "create" ? "Create Blog" : "Save Changes"}
+              {mode.type === "create" ? "Create Blog" : "Save Changes"}
             </Button>
           </DialogFooter>
         </form>

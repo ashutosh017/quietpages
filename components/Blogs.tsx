@@ -94,7 +94,10 @@ export default  function BlogsPage({blogs}:{blogs:Blog[]}) {
           isOpen={showCreateForm}
           onClose={() => setShowCreateForm(false)}
           onSave={handleCreateBlog}
-          mode="create"
+          mode={{
+            type:"create",
+            blogId:null
+          }}
         />
 
         <AuthRequiredPopUp

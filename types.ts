@@ -14,3 +14,22 @@ export interface Blog {
   author:string;
   dateCreated:string
 }
+
+export interface Mode{
+    type: "create" | "edit",
+    blogId: string | null
+  }
+export interface BlogFormProps {
+  blog?: Blog;
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (blog: Omit<Blog, "id" | "dateCreated">,mode:Mode) => void;
+  mode: Mode
+}
+
+export interface SelectedImage {
+  assetId:string,
+  publicId:string,
+  url: string;
+  file?: File;
+}

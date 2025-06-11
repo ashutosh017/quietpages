@@ -6,13 +6,66 @@ import {
   cloudinaryApiSecret,
   cloudinaryCloudName,
 } from "./config";
-import { Blog } from "./types";
+import { Blog, Mode } from "./types";
 import crypto from "crypto";
+import { prisma } from "./db/src";
+import { clerkClient } from "@clerk/nextjs/server";
 
-export const handleCreateBlog = async (blog: Omit<Blog, "id">) => {};
+export const handleCreateBlog = async (
+  blog: Omit<Blog, "id" | "dateCreated">,
+  mode: Mode
+) => {
+  try {
+    console.log(blog)
+    const res = await prisma.blog.create({
+      data: {
+        ...blog
+      },
+    });
+    return {
+      msg: "blog created successfully",
+      res,
+    };
+  } catch (error) {
+    console.log(error)
+    return {
+      msg: "error occured while creating blog",
+      error,
+    };
+  }
+};
 
-export const handleUpdateBlog = async (blog: Omit<Blog, "id">) => {};
-export const deleteImageFromCloudinary = async (assetId: string, publicId:string) => {
+export const handleUpdateBlog = async (
+  blog: Omit<Blog, "id" | "dateCreated">,
+  mode: Mode
+) => {
+  try {
+    if (!mode.blogId) {
+      return {
+        msg: "blog id not found",
+      };
+    }
+    const res = await prisma.blog.update({
+      where: {
+        id: mode.blogId,
+      },
+      data: blog,
+    });
+    return {
+      msg: "blog updated successfully",
+      res,
+    };
+  } catch (error) {
+    return {
+      msg: "error updating blog",
+      error,
+    };
+  }
+};
+export const deleteImageFromCloudinary = async (
+  assetId: string,
+  publicId: string
+) => {
   console.log("delete image called");
   if (!cloudinaryApiKey || !cloudinaryApiKey || !cloudinaryCloudName) {
     console.log("not found ");
@@ -27,10 +80,10 @@ export const deleteImageFromCloudinary = async (assetId: string, publicId:string
     )
     .digest("hex");
 
-console.log(assetId)
+  console.log(assetId);
   const payload = {
     signature,
-    public_id:publicId,
+    public_id: publicId,
     asset_id: assetId,
     api_key: cloudinaryApiKey,
     timestamp,
@@ -46,7 +99,7 @@ console.log(assetId)
         },
       }
     );
-    console.log(response.data)
+    console.log(response.data);
 
     return response.data; // { result: "ok" } or { result: "not found" }
   } catch (error: any) {

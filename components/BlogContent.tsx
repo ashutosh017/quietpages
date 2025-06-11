@@ -149,7 +149,10 @@ export default function BlogPage({ blog }: { blog: Blog }) {
         isOpen={showEditForm}
         onClose={() => setShowEditForm(false)}
         onSave={handleUpdateBlog}
-        mode="edit"
+        mode={{
+          type:"edit",
+          blogId:blog.id
+        }}
       />
 
       <DeleteConfirmation
