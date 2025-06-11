@@ -26,7 +26,6 @@ export default  function BlogsPage({blogs}:{blogs:Blog[]}) {
 
   return (
     <div className="container mx-auto px-4 py-24 max-w-4xl">
-      {/* {isSignedIn && */}
       <div className="mb-6">
         <Button
           className=""
@@ -38,19 +37,17 @@ export default  function BlogsPage({blogs}:{blogs:Blog[]}) {
           asChild
           variant={"outline"}
         >
-          {/* <Link href={"/create-blog"} className=""><Plus className=""/> Create One</Link> */}
-         <div>
+         <div className="">
              <Plus /> Create One
          </div>
         </Button>
       </div>
-      {/* } */}
 
       <div className="flex space-y-4 flex-col">
         {blogs.map((blog) => (
           <Link key={blog.id} href={`/blog/${blog.id}`}>
             <Card className="group border border-border/40 hover:border-border hover:shadow-sm transition-all duration-200 cursor-pointer bg-card/50 hover:bg-card">
-              <CardHeader className="pb-4">
+              <CardHeader className="">
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-xl font-medium leading-relaxed group-hover:text-primary transition-colors flex-1 pr-4">
                     {blog.title}

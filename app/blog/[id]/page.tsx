@@ -9,7 +9,7 @@ export default async function BlogPage({ params }: BlogPageProps) {
   const blog = await prisma.blog.findFirst({
     where:{id}
   })
-
+  console.log(blog?.content)
   if (!blog) return notFound();
 
   return  <BlogContent blog={{ ...blog, dateCreated: blog.dateCreated.toISOString() }}/>

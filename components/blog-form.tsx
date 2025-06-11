@@ -110,7 +110,6 @@ export function BlogForm({
     const publicId = selectedImages.find((img) => img.assetId === assetId)?.publicId;
     if (!publicId) return;
 
-    // const publicId = imageUrl.split("/").slice(-2).join("/").split(".")[0];
      deleteImageFromCloudinary(assetId,publicId);
 
     setSelectedImages((prev) => prev.filter((img) => img.assetId !== assetId));
@@ -121,13 +120,14 @@ export function BlogForm({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+    <Dialog  open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="w-3xl max-h-[90vh] overflow-y-auto  ">
         <DialogHeader>
           <DialogTitle>
             {mode.type === "create" ? "Create New Blog" : "Edit Blog"}
           </DialogTitle>
         </DialogHeader>
+
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">

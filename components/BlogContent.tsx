@@ -42,7 +42,7 @@ export default function BlogPage({ blog }: { blog: Blog }) {
 
   return (
     <div className="container mx-auto px-4 py-24 max-w-2xl">
-      <div className="mb-8">
+      <div className="mb-4">
         <div className="flex items-center justify-between mb-8">
           <Link href="/">
             <Button variant="ghost" size="sm" className="-ml-3">
@@ -95,7 +95,7 @@ export default function BlogPage({ blog }: { blog: Blog }) {
       </div>
 
       <article className="prose prose-neutral max-w-none">
-        <p className="text-foreground leading-relaxed text-base">
+        <p className="text-foreground leading-relaxed text-base whitespace-pre-line">
           {blog?.content}
         </p>
       </article>
