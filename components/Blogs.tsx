@@ -1,47 +1,52 @@
-"use client";
-import { useAuth } from "@clerk/nextjs";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Link from "next/link"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarDays, ImageIcon, User } from "lucide-react"
-import { Blog } from "@/types";
+'use client'
 
+import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CalendarDays, ImageIcon, Plus, User } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@clerk/nextjs";
+import { BlogForm } from "@/components/blog-form";
+import { handleCreateBlog } from "@/actions";
+import AuthRequiredPopUp from "@/components/auth-required-popup";
+import { useState } from "react";
+import { Blog } from "@/lib/generated/prisma";
 
 function truncateContent(content: string, wordLimit = 20): string {
-  const words = content.split(" ")
-  if (words.length <= wordLimit) return content
-  return words.slice(0, wordLimit).join(" ") + "..."
+  const words = content.split(" ");
+  if (words.length <= wordLimit) return content;
+  return words.slice(0, wordLimit).join(" ") + "...";
 }
 
-export default function ReadingPage() {
+export default  function BlogsPage({blogs}:{blogs:Blog[]}) {
+  const { isSignedIn } = useAuth();
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showAuthRequiredPopup, setShowAuthRequiredPopup] = useState(false);
 
-  const { getToken } = useAuth();
-  const [blogs, setBlogs] = useState<Blog[]>([]);
-  useEffect(() => {
-    (async () => {
-      try {
-        const token = await getToken();
-        const res = await axios.get("/api/v1/blogs", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setBlogs(res.data.blogs);
-      } catch (error) {
-        console.log("error: ", error);
-      }
-    })();
-  }, []);
 
- return (
-    <div className="container mx-auto px-4 py-12 max-w-4xl">
-      {/* <div className="mb-12">
-        <h1 className="text-3xl font-light mb-2">Blog</h1>
-        <p className="text-muted-foreground">Thoughts and insights</p>
-      </div> */}
 
-     <div className="space-y-6">
+  return (
+    <div className="container mx-auto px-4 py-24 max-w-4xl">
+      {/* {isSignedIn && */}
+      <div className="mb-6">
+        <Button
+          className=""
+          onClick={() => {
+            isSignedIn
+              ? setShowCreateForm(true)
+              : setShowAuthRequiredPopup(true);
+          }}
+          asChild
+          variant={"outline"}
+        >
+          {/* <Link href={"/create-blog"} className=""><Plus className=""/> Create One</Link> */}
+         <div>
+             <Plus /> Create One
+         </div>
+        </Button>
+      </div>
+      {/* } */}
+
+      <div className="flex space-y-4 flex-col">
         {blogs.map((blog) => (
           <Link key={blog.id} href={`/blog/${blog.id}`}>
             <Card className="group border border-border/40 hover:border-border hover:shadow-sm transition-all duration-200 cursor-pointer bg-card/50 hover:bg-card">
@@ -85,7 +90,18 @@ export default function ReadingPage() {
             </Card>
           </Link>
         ))}
+        <BlogForm
+          isOpen={showCreateForm}
+          onClose={() => setShowCreateForm(false)}
+          onSave={handleCreateBlog}
+          mode="create"
+        />
+
+        <AuthRequiredPopUp
+          isOpen={showAuthRequiredPopup}
+          onClose={() => setShowAuthRequiredPopup(false)}
+        />
       </div>
     </div>
-  )
+  );
 }

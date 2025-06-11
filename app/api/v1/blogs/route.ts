@@ -7,19 +7,19 @@ import { CreateBlogBodyType } from "@/types";
 
 
 export async function GET(req: NextRequest) {
-  const headersList = await headers();
-  const authHeader = headersList.get("Authorization");
-  if (!authHeader) {
-    return NextResponse.json(
-      {
-        msg: "no req header",
-      },
-      {
-        status: 400,
-      }
-    );
-  }
-  await verifyClerkToken(authHeader);
+  // const headersList = await headers();
+  // const authHeader = headersList.get("Authorization");
+  // if (!authHeader) {
+  //   return NextResponse.json(
+  //     {
+  //       msg: "no req header",
+  //     },
+  //     {
+  //       status: 400,
+  //     }
+  //   );
+  // }
+  // await verifyClerkToken(authHeader);
   try {
     const blogs = await prisma.blog.findMany();
 

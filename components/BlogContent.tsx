@@ -1,49 +1,78 @@
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, CalendarDays, User, ZoomIn } from "lucide-react";
-import {  useState } from "react";
+import {
+  ArrowLeft,
+  CalendarDays,
+  User,
+  ZoomIn,
+  Edit,
+  Trash2,
+  MoreHorizontal,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 import { Blog } from "@/types";
 import Image from "next/image";
 import { ImageLightbox } from "@/components/image-ligtbox";
+import { useRouter } from "next/router";
+import { DeleteConfirmation } from "./delete-confirmation";
+import { BlogForm } from "./blog-form";
+import { useAuth, useUser } from "@clerk/nextjs";
+import { handleUpdateBlog } from "@/actions";
 
-
-
-export default function BlogPage({blog}:{blog:Blog}) {
+export default function BlogPage({ blog }: { blog: Blog }) {
+  const { isSignedIn } = useAuth();
+  const { user } = useUser();
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const openLightbox = (index: number) => {
     setLightboxIndex(index);
     setLightboxOpen(true);
   };
-//   const [blog, setBlog] = useState<Blog | null>(null);
-//   const searchParams = useSearchParams();
-//   console.log("sp: ", searchParams);
-//   useEffect(() => {
-//     (async () => {
-//       const { id } = await params;
-//       try {
-//         const res = await axios.get(`/api/v1/blogs/${id}`);
-//         if (!res.data) {
-//           throw new Error();
-//         }
-//         setBlog(res.data);
-//       } catch (error) {
-//         console.log("error");
-//         notFound();
-//       }
-//     })();
-//   }, []);
+  console.log("user.id: ",user?.id)
+  console.log("userId: ",blog.userId)
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-2xl">
+    <div className="container mx-auto px-4 py-24 max-w-2xl">
       <div className="mb-8">
-        <Link href="/blogs">
-          <Button variant="ghost" size="sm" className="mb-8 -ml-3">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-        </Link>
+        <div className="flex items-center justify-between mb-8">
+          <Link href="/">
+            <Button variant="ghost" size="sm" className="-ml-3">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
+          </Link>
+          {isSignedIn && user?.id === blog.userId && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setShowEditForm(true)}>
+                  <Edit className="w-4 h-4 mr-2" />
+                  Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => setShowDeleteDialog(true)}
+                  className="text-red-600 focus:text-red-600"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Delete
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
 
         <h1 className="text-2xl font-medium mb-6 leading-relaxed">
           {blog?.title}
@@ -115,6 +144,20 @@ export default function BlogPage({blog}:{blog:Blog}) {
           onClose={() => setLightboxOpen(false)}
         />
       )}
+      <BlogForm
+        blog={blog}
+        isOpen={showEditForm}
+        onClose={() => setShowEditForm(false)}
+        onSave={handleUpdateBlog}
+        mode="edit"
+      />
+
+      <DeleteConfirmation
+        isOpen={showDeleteDialog}
+        onClose={() => setShowDeleteDialog(false)}
+        onConfirm={() => {}}
+        title={blog.title}
+      />
     </div>
   );
 }

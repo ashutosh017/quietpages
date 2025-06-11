@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { cloudinaryCloudName, cloudinaryPreset } from "@/config";
 import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { useId, useState } from "react";
@@ -24,9 +25,7 @@ export default function Page() {
   const uploadedImageUrls: string[] = [];
 
   try {
-    // Upload images to Cloudinary
-    const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET;
-    const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+
     if(!cloudinaryPreset || !cloudinaryCloudName){
       return;
     }
@@ -34,7 +33,7 @@ export default function Page() {
       const imageFormData = new FormData();
       imageFormData.append("file", file);
       
-      imageFormData.append("upload_preset",cloudinaryPreset ); // unsigned preset
+      imageFormData.append("upload_preset",cloudinaryPreset ); 
       imageFormData.append("cloud_name", cloudinaryCloudName);
 
       const cloudinaryRes = await axios.post(
@@ -45,7 +44,6 @@ export default function Page() {
       uploadedImageUrls.push(cloudinaryRes.data.secure_url);
     }
 
-    // Send blog creation request with uploaded image URLs
     const res = await axios.post("/api/v1/blogs", {
       title,
       content,
@@ -82,7 +80,7 @@ export default function Page() {
           name="Blog Title"
           type="text"
           id={titleId}
-          className="border text-lg px-4 py-2 font-semibold"
+          className="border text-lg rounded-xl px-4 py-2 font-semibold"
         />
         <label htmlFor={contentId} className="LabelStyle">
           Blog Content
@@ -90,7 +88,7 @@ export default function Page() {
         <textarea
           id={contentId}
           name="Blog Content"
-          className="border h-40 text-lg font-semibold px-4 py-2"
+          className="border h-40 text-lg rounded-xl font-semibold px-4 py-2"
         />
         <div className="flex items-center">
           {" "}

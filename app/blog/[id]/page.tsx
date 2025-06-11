@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import BlogContent from './BlogContent'
+import BlogContent from '../../../components/BlogContent'
 import { prisma } from "@/db/src";
 interface BlogPageProps {
   params: Promise<{ id: string }>;
