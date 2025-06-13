@@ -6,6 +6,7 @@ import {
   SignedIn,
   SignedOut,
   UserButton,
+  useAuth,
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
@@ -16,8 +17,10 @@ import { handleCreateBlog } from "@/actions";
 import { Menu, Monitor, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import AuthRequiredPopUp from "./auth-required-popup";
 
 export default function Header() {
+  const { isSignedIn } = useAuth();
   const { theme, setTheme } = useTheme();
   const pathname = usePathname();
   const [showBlogForm, setShowBlogForm] = useState(false);
@@ -25,10 +28,11 @@ export default function Header() {
   const [scrollY, setScrollY] = useState(0);
   const [headerStyle, setHeaderStyle] = useState("hidden");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showSigninRequired, setShowSigninRequired] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
-    console.log("toggle menu called")
-  }
+    console.log("toggle menu called");
+  };
   useEffect(() => {
     router.prefetch("/blogs");
     router.prefetch("/my-blogs");
@@ -96,7 +100,7 @@ export default function Header() {
           </Button>
           <Button
             onClick={() => {
-              setShowBlogForm(true);
+              isSignedIn ? setShowBlogForm(true) : setShowSigninRequired(true);
             }}
             variant="ghost"
             className={`nav-btn-style  ${
@@ -205,7 +209,9 @@ export default function Header() {
             </Button>
             <Button
               onClick={() => {
-                setShowBlogForm(true);
+                isSignedIn
+                  ? setShowBlogForm(true)
+                  : setShowSigninRequired(true);
                 setIsMenuOpen(false);
               }}
               variant="ghost"
@@ -267,12 +273,18 @@ export default function Header() {
                 </Button>
               </div>
               <SignedOut>
-                <Button onClick={toggleMenu} className="w-full bg-black/70 hover:bg-black hover:text-white text-white dark:bg-white/90 hover:dark:bg-white dark:text-black" variant="outline" asChild>
+                <Button
+                  onClick={toggleMenu}
+                  className="w-full bg-black/70 hover:bg-black hover:text-white text-white dark:bg-white/90 hover:dark:bg-white dark:text-black"
+                  variant="outline"
+                  asChild
+                >
                   <SignInButton />
                 </Button>
               </SignedOut>
               <SignedIn>
-                <Button onClick={toggleMenu}
+                <Button
+                  onClick={toggleMenu}
                   className="w-full bg-black/70 hover:bg-black hover:text-white text-white dark:bg-white/90 hover:dark:bg-white dark:text-black"
                   variant="outline"
                   asChild
@@ -292,6 +304,10 @@ export default function Header() {
           type: "create",
           blogId: null,
         }}
+      />
+      <AuthRequiredPopUp
+        isOpen={showSigninRequired}
+        onClose={() => setShowSigninRequired(false)}
       />
     </div>
   );

@@ -18,7 +18,11 @@ export default function AuthRequiredPopUp({
   const router = useRouter();
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent aria-description="blog-form" aria-describedby="blog-form" className="sm:max-w-md">
+      <DialogContent
+        aria-description="blog-form"
+        aria-describedby="blog-form"
+        className="sm:max-w-md"
+      >
         <DialogHeader>
           <DialogTitle className="text-red-600">Sign In Required</DialogTitle>
           <DialogDescription>
@@ -26,11 +30,14 @@ export default function AuthRequiredPopUp({
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => onClose}>
+          <Button variant="outline" onClick={() => onClose()}>
             Cancel
           </Button>
           <Button
-            onClick={() => router.push("/sign-in")}
+            onClick={() => {
+              onClose();
+              router.push("/sign-in");
+            }}
             className="bg-red-600 text-white hover:bg-red-700"
           >
             Go to Sign In
