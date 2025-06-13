@@ -12,8 +12,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
 import Link from "next/link";
-import Header from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import { Footer } from "@/components/footer";
+import Header from "@/components/header";
+import MobileHeader from "@/components/mobile-header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,6 +51,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+            <MobileHeader/>
           <Header/>
 
             {children}

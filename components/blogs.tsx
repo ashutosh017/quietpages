@@ -10,7 +10,7 @@ import { handleCreateBlog } from "@/actions";
 import AuthRequiredPopUp from "@/components/auth-required-popup";
 import { useState } from "react";
 import { Blog } from "@/lib/generated/prisma";
-import { EmptyState } from "./EmptyState";
+import { EmptyState } from "./empty-state";
 
 function truncateContent(content: string, wordLimit = 20): string {
   const words = content.split(" ");
@@ -49,7 +49,7 @@ if(blogs.length===0){
 }
 
   return (
-    <div className="container min-h-screen mx-auto px-4 py-24 max-w-4xl">
+    <div className="container min-h-screen mx-auto px-4 py-16 lg:py-24 max-w-4xl">
       <div className="mb-6">
         <Button
           className=""

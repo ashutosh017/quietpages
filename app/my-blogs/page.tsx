@@ -1,20 +1,16 @@
-import BlogsPage from "@/components/Blogs";
-import SignInRequiredPage from "@/components/signin-required-page";
-import SignInRequired from "@/components/signin-required-page";
+
+import BlogsPage from "@/components/blogs";
+import MyBlogs from "@/app/my-blogs/my-blogs";
 import { prisma } from "@/lib/prisma";
-import { useAuth, useUser } from "@clerk/nextjs"
-import { currentUser, getAuth } from "@clerk/nextjs/server";
+import { Suspense } from "react";
+import Loading from "./loading";
 
-export default async function page(){
-  const user = await currentUser()
 
-  const blogs = await prisma.blog.findMany({
-    where:{
-      userId:user?.id
-    }
-  })
-  console.log("my blogs: ",blogs)
+export default async function page() {
 
-  return <BlogsPage blogs={blogs}/>
 
+
+  return (
+    <Suspense fallback={<Loading/>}><MyBlogs/></Suspense>
+  );
 }

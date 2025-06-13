@@ -18,7 +18,7 @@ export default function AuthRequiredPopUp({
   const router = useRouter();
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent aria-description="blog-form" aria-describedby="blog-form" className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-red-600">Sign In Required</DialogTitle>
           <DialogDescription>

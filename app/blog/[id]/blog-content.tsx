@@ -21,12 +21,12 @@ import { Blog } from "@/types";
 import Image from "next/image";
 import { ImageLightbox } from "@/components/image-ligtbox";
 import { useRouter } from "next/router";
-import { DeleteConfirmation } from "./delete-confirmation";
-import { BlogForm } from "./blog-form";
+import { DeleteConfirmation } from "../../../components/delete-confirmation";
+import { BlogForm } from "../../../components/blog-form";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { handleDeleteBlog, handleUpdateBlog } from "@/actions";
 
-export default function BlogPage({ blog }: { blog: Blog }) {
+export default function BlogContent({ blog }: { blog: Blog }) {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
   const [lightboxOpen, setLightboxOpen] = useState(false);

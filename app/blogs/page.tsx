@@ -1,14 +1,12 @@
 
-import BlogsPage from "@/components/Blogs";
-import { prisma } from "@/lib/prisma";
+import AllBlogs from "@/app/blogs/all-blogs";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 
 export default async function ReadingPage() {
 
-
-  const blogs = await prisma.blog.findMany();
-
   return (
-    <BlogsPage blogs={blogs}/>
+    <Suspense fallback={<Loading/>}><AllBlogs/></Suspense>
   );
 }

@@ -1,0 +1,18 @@
+import BlogsPage from "@/components/blogs";
+import { prisma } from "@/lib/prisma";
+import { currentUser } from "@clerk/nextjs/server";
+
+export default async function MyBlogs(){
+
+  const user = await currentUser()
+
+  const blogs = await prisma.blog.findMany({
+    where:{
+      userId:user?.id
+    }
+  })
+  console.log("my blogs: ",blogs)
+
+  return <BlogsPage blogs={blogs}/>
+
+}
