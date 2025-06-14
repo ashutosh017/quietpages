@@ -25,11 +25,11 @@ export default function Home() {
   const { isSignedIn } = useAuth();
   return (
     <div className="text-black/80 dark:text-white/90 h-screen flex flex-col items-center justify-center  text-center">
-      <h1 className="text-6xl lg:text-9xl font-extrabold    lg:px-32">
+      <h1 className="text-5xl lg:text-9xl font-extrabold    lg:px-32">
         Welcome, to
         <p className="">QuietPages</p>
       </h1>
-      <div className="flex text-accent tracking-widest py-4 text-lg font-medium space-x-2 items-center lg:space-x-8 ">
+      <div className="flex text-muted-foreground tracking-widest py-4 text-lg font-medium space-x-2 items-center lg:space-x-8 ">
         Write, Share, Blogs.
       </div>
       <div className="flex flex-col lg:flex-row gap-5">
