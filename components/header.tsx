@@ -146,7 +146,7 @@ export default function Header() {
       {/*mobile navbar */}
       <header
         className={cn(
-          "flex flex-col z-10  lg:hidden bg-white/90  dark:bg-black/80  fixed top-0 left-0 w-screen py-4 px-4    backdrop-blur-md shadow-none dark:shadow-white/10"
+          "flex flex-col z-10  lg:hidden bg-white/90  dark:bg-background/40  fixed top-0 left-0 w-screen py-4 px-4    backdrop-blur-md shadow-none dark:shadow-white/10"
         )}
       >
         <div className="flex w-full justify-between">

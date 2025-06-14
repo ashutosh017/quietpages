@@ -1,17 +1,8 @@
 import type { Metadata } from "next";
-import {
-  ClerkProvider,
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/ModeToggle";
-import Link from "next/link";
 import { Footer } from "@/components/footer";
 import Header from "@/components/header";
 
@@ -30,7 +21,47 @@ export const metadata: Metadata = {
     icon: "/favicon.ico",
   },
   title: "QuietPages: Write, share, blogs.",
-  description: "Blog writing, sharing, platform",
+  description:
+    "A platform for writing and sharing blogs with your friends and family.",
+  keywords: [
+    "blog",
+    "blogs",
+    "blog writing platform",
+    "blog writing",
+    "blog creating platform",
+    "blog creating",
+    "share blog",
+    "blog sharing",
+    "blog sharing platform",
+  ],
+  authors: [{ name: "Ashutosh" }],
+  alternates: {
+    canonical: "https://quietpages.vercel.app/",
+  },
+
+  openGraph: {
+    title: "QuietPages: Write, share, blogs.",
+  description:
+    "A platform for writing and sharing blogs with your friends and family.",
+    "url":"https://quietpages.ashutosh007.xyz",
+    "siteName":"QuietPages. Write, Share, Blogs.",
+    images: [
+      {
+        url: "https://quietpages.ashutosh007.xyz/opengraph-image.png", // Replace with your actual Open Graph image URL
+        width: 1200,
+        height: 630,
+        alt: "QuietPages",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "QuietPages",
+    description:
+      "A platform for writing and sharing blogs with your friends and family.",
+    images: ["https://quietpages.ashutosh007.xyz/opengraph-image.png"], // Replace with your actual Twitter card image URL
+  },
 };
 
 export default function RootLayout({
@@ -50,10 +81,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-          <Header/>
+            <Header />
 
             {children}
-            <Footer/>
+            <Footer />
           </ThemeProvider>
         </body>
       </html>

@@ -1,7 +1,0 @@
-{
-    "name": "QuietPages. Write, Share, Blogs.",
-    "short_name": "QuietPages",
-    "Description": "A platform for writing and sharing blogs with your friends and family.",
-    "start_url": "/",
-    "display":"standalone"
-}
