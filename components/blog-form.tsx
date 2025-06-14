@@ -121,7 +121,7 @@ export function BlogForm({
 
   return (
     <Dialog  open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-3xl max-h-[90vh] overflow-y-auto  ">
+      <DialogContent className="w-3xl max-h-[90vh] bg-white dark:bg-black/70 backdrop-blur-xl overflow-y-auto  ">
         <DialogHeader>
           <DialogTitle>
             {mode.type === "create" ? "Create New Blog" : "Edit Blog"}

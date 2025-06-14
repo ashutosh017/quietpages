@@ -2,6 +2,8 @@ import BlogsPage from "@/components/blogs";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 
+export const revalidate = 60;
+
 export default async function MyBlogs(){
 
   const user = await currentUser()

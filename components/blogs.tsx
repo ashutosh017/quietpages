@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarDays, ImageIcon, Plus, User } from "lucide-react";
+import { ArrowLeft, CalendarDays, ImageIcon, Plus, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/nextjs";
 import { BlogForm } from "@/components/blog-form";
@@ -49,19 +49,25 @@ if(blogs.length===0){
 }
 
   return (
-    <div className="container min-h-screen mx-auto px-4 py-16 lg:py-24 max-w-4xl">
-      <div className="mb-6">
+    <div className="container min-h-screen mx-auto px-4 py-16 lg:py-24 max-w-3xl">
+      <div className="mb-6 flex max-w-3xl justify-between mx-auto">
+           <Button onClick={()=>{
+              window.history.back()
+            }} variant="ghost" size="sm" className="-ml-3">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
         <Button
           className=""
           onClick={() => {
             isSignedIn
-              ? setShowCreateForm(true)
-              : setShowAuthRequiredPopup(true);
+            ? setShowCreateForm(true)
+            : setShowAuthRequiredPopup(true);
           }}
           asChild
           variant={"outline"}
-        >
-         <div className="">
+          >
+         <div className="border-neutral-700 dark:border-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-sm font-medium">
              <Plus /> Create One
          </div>
         </Button>

@@ -14,7 +14,6 @@ import { ModeToggle } from "@/components/ModeToggle";
 import Link from "next/link";
 import { Footer } from "@/components/footer";
 import Header from "@/components/header";
-import MobileHeader from "@/components/mobile-header";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -51,7 +50,6 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {/* <MobileHeader/> */}
           <Header/>
 
             {children}

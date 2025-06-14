@@ -2,6 +2,8 @@
 import BlogsPage from "@/components/blogs";
 import { prisma } from "@/lib/prisma";
 
+export const revalidate = 60;
+
 
 export default async function AllBlogs() {
 

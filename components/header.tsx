@@ -10,14 +10,21 @@ import {
 } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
-import { usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BlogForm } from "./blog-form";
 import { handleCreateBlog } from "@/actions";
-import { Menu, Monitor, Moon, Sun, X } from "lucide-react";
+import {
+  Github,
+  Menu,
+  Moon,
+  Sun,
+  X,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import AuthRequiredPopUp from "./auth-required-popup";
+import Link from "next/link";
 
 export default function Header() {
   const { isSignedIn } = useAuth();
@@ -25,8 +32,6 @@ export default function Header() {
   const pathname = usePathname();
   const [showBlogForm, setShowBlogForm] = useState(false);
   const router = useRouter();
-  const [scrollY, setScrollY] = useState(0);
-  const [headerStyle, setHeaderStyle] = useState("hidden");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSigninRequired, setShowSigninRequired] = useState(false);
   const toggleMenu = () => {
@@ -37,27 +42,18 @@ export default function Header() {
     router.prefetch("/blogs");
     router.prefetch("/my-blogs");
   }, [router]);
-  useEffect(() => {
-    console.log("useeffect ran");
-    window.onscroll = () => {
-      console.log(window.scrollY);
-      setScrollY(window.scrollY);
-      if (window.scrollY > 0) setHeaderStyle("flex");
-      else setHeaderStyle("hidden");
-    };
-  }, [scrollY]);
 
   const themeToggle = () => setTheme(theme === "light" ? "dark" : "light");
   return (
     <div>
       <header
         className={cn(
-          `hidden z-10 dark:bg-black/10  fixed top-0 left-0 w-screen py-4 px-4 justify-evenly items-center backdrop-blur-md shadow-none dark:shadow-white/10 ${
-            pathname === "/" ? `lg:${headerStyle}` : "lg:flex"
-          }`
+          "hidden z-10 dark:bg-black/10  fixed top-0 left-0 w-screen py-4 px-4 lg:flex gap-28 justify-center items-center backdrop-blur-md shadow-none dark:shadow-white/10"
         )}
       >
-        <h1>QuietPages</h1>
+        <Link href={"/"} className="w-44 ">
+          <h1 className="font-bold">QuietPages</h1>
+        </Link>
         <nav className=" top-4 left-1/2  flex items-center justify-between px-6 py-2  w-fit rounded-4xl  dark:bg-black/30 border shadow-lg    dark:shadow-white/10  gap-2">
           <Button
             variant="ghost"
@@ -112,9 +108,19 @@ export default function Header() {
             Create Blog
           </Button>
         </nav>
-        <div className="flex gap-4 items-center  w-32 ">
+        <div className="flex  gap-4 items-center  min-w-60  ">
+          <Link
+            href="https://github.com/ashutosh017/quietpages"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="primary-btn-style"
+          >
+            Give it a star
+            <Github className="w-5 h-5" />
+          </Link>
+
           <Button
-            className="hover:bg-transparent dark:hover:text-white hover:text-black text-black/80 dark:text-white/70"
+            className="nav-btn-icon-style"
             onClick={themeToggle}
             size={"icon"}
             variant={"ghost"}
@@ -139,13 +145,28 @@ export default function Header() {
 
       {/*mobile navbar */}
       <header
-        className={` flex-col z-10  lg:hidden  dark:bg-black/40  fixed top-0 left-0 w-screen py-4 px-4    backdrop-blur-lg shadow-none dark:shadow-white/10 ${
-          pathname === "/" ? `${headerStyle}` : "flex"
-        }`}
+        className={cn(
+          "flex flex-col z-10  lg:hidden  dark:bg-black/50  fixed top-0 left-0 w-screen py-4 px-4    backdrop-blur-xl shadow-none dark:shadow-white/10"
+        )}
       >
         <div className="flex w-full justify-between">
-          <h1>QuietPages</h1>
+          <Link href={"/"} className="w-44 ">
+            <h1 className="font-bold">QuietPages</h1>
+          </Link>
           <div className="flex gap-4 justify-end">
+              <Button
+            className="nav-btn-icon-style"
+            onClick={themeToggle}
+            size={"icon"}
+            variant={"ghost"}
+            asChild
+          >
+            {theme === "light" ? (
+              <Moon className="w-6 h-6" />
+            ) : (
+              <Sun className="w-6 h-6" />
+            )}
+          </Button>
             <SignedIn>
               <UserButton />
             </SignedIn>
@@ -225,57 +246,22 @@ export default function Header() {
             </Button>
 
             <div className="flex flex-col items-center mt-4 gap-4 w-full px-1">
-              <div className="flex gap-4">
-                <Button
-                  onClick={() => {
-                    setTheme("light");
-                  }}
-                  variant={"ghost"}
-                  className={`hover:bg-transparent dark:hover:text-white hover:text-black ${
-                    theme === "light"
-                      ? "text-black dark:text-white"
-                      : "text-black/50 dark:text-white/60"
-                  }`}
-                  size={"icon"}
-                  asChild
-                >
-                  <Sun className="w-6 h-6 " />
-                </Button>
-                <Button
-                  onClick={() => {
-                    setTheme("dark");
-                  }}
-                  variant={"ghost"}
-                  className={`hover:bg-transparent dark:hover:text-white hover:text-black ${
-                    theme === "dark"
-                      ? "text-black dark:text-white"
-                      : "text-black/50 dark:text-white/60"
-                  }`}
-                  size={"icon"}
-                  asChild
-                >
-                  <Moon className="w-6 h-6 " />
-                </Button>
-                <Button
-                  onClick={() => {
-                    setTheme("system");
-                  }}
-                  variant={"ghost"}
-                  className={`hover:bg-transparent dark:hover:text-white hover:text-black ${
-                    theme === "system"
-                      ? "text-black dark:text-white"
-                      : "text-black/50 dark:text-white/60"
-                  }`}
-                  size={"icon"}
-                  asChild
-                >
-                  <Monitor className="w-6 h-6 " />
-                </Button>
-              </div>
+              {/* <div className="flex gap-4">
+               
+              </div> */}
+              <Link
+                href="https://github.com/ashutosh017/quietpages"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn("flex items-center justify-center gap-2 px-4 py-2 rounded-lg border  transition-colors text-sm font-medium","mob-nav-btn-style")}
+              >
+                Give it a star
+                <Github className="w-5 h-5" />
+              </Link>
               <SignedOut>
                 <Button
                   onClick={toggleMenu}
-                  className="w-full bg-black/70 hover:bg-black hover:text-white text-white dark:bg-white/90 hover:dark:bg-white dark:text-black"
+                  className="mob-nav-btn-style"
                   variant="outline"
                   asChild
                 >
@@ -285,7 +271,7 @@ export default function Header() {
               <SignedIn>
                 <Button
                   onClick={toggleMenu}
-                  className="w-full bg-black/70 hover:bg-black hover:text-white text-white dark:bg-white/90 hover:dark:bg-white dark:text-black"
+                  className="mob-nav-btn-style"
                   variant="outline"
                   asChild
                 >
