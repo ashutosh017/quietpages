@@ -49,7 +49,7 @@ if(blogs.length===0){
 }
 
   return (
-    <div className="container min-h-screen mx-auto px-4 py-16 lg:py-24 max-w-3xl">
+    <div className="container min-h-screen mx-auto px-4 py-18 lg:py-24 max-w-3xl">
       <div className="mb-6 flex max-w-3xl justify-between mx-auto">
            <Button onClick={()=>{
               window.history.back()
@@ -67,7 +67,7 @@ if(blogs.length===0){
           asChild
           variant={"outline"}
           >
-         <div className="border-neutral-700 dark:border-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-sm font-medium">
+         <div className="primary-btn-style flex items-center gap-2 ">
              <Plus /> Create One
          </div>
         </Button>

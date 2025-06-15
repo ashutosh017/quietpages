@@ -1,5 +1,8 @@
 "use client";
-
+import { FaGithub } from "react-icons/fa";
+import { FaSquareXTwitter } from "react-icons/fa6";
+import { FaLinkedin } from "react-icons/fa";
+import { FaYoutube } from "react-icons/fa";
 import {
   SignInButton,
   SignOutButton,
@@ -15,9 +18,13 @@ import { useEffect, useState } from "react";
 import { BlogForm } from "./blog-form";
 import { handleCreateBlog } from "@/actions";
 import {
-  Github,
+  Home,
+  Layers,
+  Layers2,
+  LogOut,
   Menu,
   Moon,
+  SquarePen,
   Sun,
   X,
 } from "lucide-react";
@@ -48,144 +55,14 @@ export default function Header() {
     <div>
       <header
         className={cn(
-          "hidden z-10 dark:bg-black/10  fixed top-0 left-0 w-screen py-4 px-4 lg:flex gap-28 justify-center items-center backdrop-blur-md shadow-none dark:shadow-white/10"
+          " z-10 dark:bg-black/10  fixed top-0 left-0 w-screen py-4 px-4    lg:px-60  backdrop-blur-md shadow-none dark:shadow-white/10"
         )}
       >
-        <Link href={"/"} className="w-44 ">
-          <h1 className="font-bold">QuietPages</h1>
-        </Link>
-        <nav className=" top-4 left-1/2  flex items-center justify-between px-6 py-2  w-fit rounded-4xl  dark:bg-black/30 border shadow-lg    dark:shadow-white/10  gap-2">
-          <Button
-            variant="ghost"
-            className={`nav-btn-style ${
-              pathname === "/"
-                ? "text-black dark:text-white"
-                : "text-black/60 dark:text-white/60"
-            }`}
-            onClick={() => {
-              router.push("/", { scroll: false });
-            }}
-          >
-            Home
-          </Button>
-          <Button
-            variant="ghost"
-            className={`nav-btn-style  ${
-              pathname === "/blogs"
-                ? "text-black dark:text-white"
-                : "text-black/60 dark:text-white/60"
-            }`}
-            onClick={() => {
-              router.push("/blogs", { scroll: false });
-            }}
-          >
-            Blogs
-          </Button>
-          <Button
-            onClick={() => {
-              router.push("/my-blogs", { scroll: false });
-            }}
-            variant="ghost"
-            className={`nav-btn-style  ${
-              pathname === "/my-blogs"
-                ? "text-black dark:text-white"
-                : "text-black/60 dark:text-white/60"
-            }`}
-          >
-            My Blogs
-          </Button>
-          <Button
-            onClick={() => {
-              isSignedIn ? setShowBlogForm(true) : setShowSigninRequired(true);
-            }}
-            variant="ghost"
-            className={`nav-btn-style  ${
-              pathname === "/create-blog"
-                ? "text-black dark:text-white"
-                : "text-black/60 dark:text-white/60"
-            }`}
-          >
-            Create Blog
-          </Button>
-        </nav>
-        <div className="flex  gap-4 items-center  min-w-60  ">
-          <Link
-            href="https://github.com/ashutosh017/quietpages"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="primary-btn-style"
-          >
-            Give it a star
-            <Github className="w-5 h-5" />
+        <div className="flex   justify-between lg:justify-around items-center ">
+          <Link href={"/"} className="w-fit lg:w-44 ">
+            <h1 className="font-semibold text-xl lg:text-2xl lg:font-bold">QuietPages</h1>
           </Link>
-
-          <Button
-            className="nav-btn-icon-style"
-            onClick={themeToggle}
-            size={"icon"}
-            variant={"ghost"}
-            asChild
-          >
-            {theme === "light" ? (
-              <Moon className="w-6 h-6" />
-            ) : (
-              <Sun className="w-6 h-6" />
-            )}
-          </Button>
-          <SignedOut>
-            <Button variant="outline" asChild>
-              <SignInButton />
-            </Button>
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </div>
-      </header>
-
-      {/*mobile navbar */}
-      <header
-        className={cn(
-          "flex flex-col z-10  lg:hidden bg-white/90  dark:bg-background/40  fixed top-0 left-0 w-screen py-4 px-4    backdrop-blur-md shadow-none dark:shadow-white/10"
-        )}
-      >
-        <div className="flex w-full justify-between">
-          <Link href={"/"} className="w-44 ">
-            <h1 className="font-bold">QuietPages</h1>
-          </Link>
-          <div className="flex gap-4 justify-end">
-              <Button
-            className="nav-btn-icon-style"
-            onClick={themeToggle}
-            size={"icon"}
-            variant={"ghost"}
-            asChild
-          >
-            {theme === "light" ? (
-              <Moon className="w-6 h-6" />
-            ) : (
-              <Sun className="w-6 h-6" />
-            )}
-          </Button>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-            <Button
-              onClick={toggleMenu}
-              variant={"ghost"}
-              asChild
-              size={"icon"}
-            >
-              {isMenuOpen ? (
-                <X className="h-6 w-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
-            </Button>
-          </div>
-        </div>
-        {isMenuOpen && (
-          <nav className=" top-4 h-screen left-1/2 mt-4 flex flex-col items-center   py-2  w-full  gap-2">
+          <nav className="hidden top-4 left-1/2  lg:flex items-center justify-between px-6 py-2  w-fit rounded-4xl  dark:bg-black/30 border shadow-lg    dark:shadow-white/10  gap-2">
             <Button
               variant="ghost"
               className={`nav-btn-style ${
@@ -195,7 +72,6 @@ export default function Header() {
               }`}
               onClick={() => {
                 router.push("/", { scroll: false });
-                setIsMenuOpen(false);
               }}
             >
               Home
@@ -209,7 +85,6 @@ export default function Header() {
               }`}
               onClick={() => {
                 router.push("/blogs", { scroll: false });
-                setIsMenuOpen(false);
               }}
             >
               Blogs
@@ -217,7 +92,6 @@ export default function Header() {
             <Button
               onClick={() => {
                 router.push("/my-blogs", { scroll: false });
-                setIsMenuOpen(false);
               }}
               variant="ghost"
               className={`nav-btn-style  ${
@@ -233,7 +107,6 @@ export default function Header() {
                 isSignedIn
                   ? setShowBlogForm(true)
                   : setShowSigninRequired(true);
-                setIsMenuOpen(false);
               }}
               variant="ghost"
               className={`nav-btn-style  ${
@@ -244,20 +117,121 @@ export default function Header() {
             >
               Create Blog
             </Button>
+          </nav>
+          <div className="flex   gap-4 items-center justify-end  max-w-72    ">
+            <Link
+              href="https://github.com/ashutosh017/quietpages"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="primary-btn-style hidden lg:flex items-center justify-center gap-2"
+            >
+              Give it a star
+              {/* <Github className="w-5 h-5" /> */}
+              <FaGithub className="w-5 h-5" />
+            </Link>
 
-            <div className="flex flex-col items-center mt-4 gap-4 w-full px-1">
-              {/* <div className="flex gap-4">
-               
-              </div> */}
-              <Link
-                href="https://github.com/ashutosh017/quietpages"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn("flex items-center justify-center gap-2 px-4 py-2 rounded-lg border  transition-colors text-sm font-medium","mob-nav-btn-style")}
-              >
-                Give it a star
-                <Github className="w-5 h-5" />
-              </Link>
+            <Button
+              className="nav-btn-icon-style "
+              onClick={themeToggle}
+              size={"icon"}
+              variant={"ghost"}
+              asChild
+            >
+              {theme === "light" ? (
+                <Moon className="w-6 h-6" />
+              ) : (
+                <Sun className="w-6 h-6" />
+              )}
+            </Button>
+            <SignedOut>
+              <Button variant="outline" asChild>
+                <SignInButton />
+              </Button>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+            {isMenuOpen ? (
+              <X onClick={toggleMenu} className="lg:hidden" />
+            ) : (
+              <Menu onClick={toggleMenu} className="lg:hidden" />
+            )}
+          </div>
+        </div>
+        {isMenuOpen && (
+          <nav className="flex top-4 h-screen mt-4 lg:hidden flex-col items-center   py-2  w-full  gap-2">
+            <Button
+              variant="ghost"
+              className={`nav-btn-style ${
+                pathname === "/"
+                  ? "text-black dark:text-white"
+                  : "text-black/60 dark:text-white/60"
+              }`}
+              onClick={() => {
+                router.push("/", { scroll: false });
+                setIsMenuOpen(false);
+              }}
+            >
+              <div className="flex justify-end gap-2">
+                Home
+                <Home />
+              </div>
+            </Button>
+            <Button
+              variant="ghost"
+              className={`nav-btn-style  ${
+                pathname === "/blogs"
+                  ? "text-black dark:text-white"
+                  : "text-black/60 dark:text-white/60"
+              }`}
+              onClick={() => {
+                router.push("/blogs", { scroll: false });
+                setIsMenuOpen(false);
+              }}
+            >
+              <div className="flex justify-end gap-2">
+                Blogs
+                <Layers />
+              </div>
+            </Button>
+            <Button
+              onClick={() => {
+                router.push("/my-blogs", { scroll: false });
+                setIsMenuOpen(false);
+              }}
+              variant="ghost"
+              className={`nav-btn-style  ${
+                pathname === "/my-blogs"
+                  ? "text-black dark:text-white"
+                  : "text-black/60 dark:text-white/60"
+              }`}
+            >
+              <div className="flex justify-end gap-2">
+                My Blogs
+                <Layers2 />
+              </div>
+            </Button>
+            <Button
+              onClick={() => {
+                isSignedIn
+                  ? setShowBlogForm(true)
+                  : setShowSigninRequired(true);
+                setIsMenuOpen(false);
+              }}
+              variant="ghost"
+              className={`nav-btn-style  ${
+                pathname === "/create-blog"
+                  ? "text-black dark:text-white"
+                  : "text-black/60 dark:text-white/60"
+              }`}
+            >
+              <div className="flex justify-end gap-2">
+                Create Blog
+                <SquarePen />
+              </div>
+            </Button>
+
+            <div className="flex flex-col items-center mt-4 gap-4 w-full ">
               <SignedOut>
                 <Button
                   onClick={toggleMenu}
@@ -268,6 +242,23 @@ export default function Header() {
                   <SignInButton />
                 </Button>
               </SignedOut>
+              <Link
+                href="https://github.com/ashutosh017/quietpages"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full "
+              >
+                <Button
+                  className="mob-nav-btn-style "
+                  variant={"outline"}
+                  asChild
+                >
+                  <div className="flex items-center justify-center gap-2">
+                    Give it a star
+                    <FaGithub size={50} />
+                  </div>
+                </Button>
+              </Link>
               <SignedIn>
                 <Button
                   onClick={toggleMenu}
@@ -275,13 +266,53 @@ export default function Header() {
                   variant="outline"
                   asChild
                 >
-                  <SignOutButton />
+                  <SignOutButton>
+                    <div className="flex items-center justify-center">
+                      Sign out <LogOut />
+                    </div>
+                  </SignOutButton>
                 </Button>
               </SignedIn>
+            </div>
+            <div>
+              <div className="mt-4 mb-2 py-2 font-bold text-center text-lg ">
+                My Socials
+              </div>
+              <div className="flex gap-8">
+                <Link
+                  href="https://x.com/ashutosh__018"
+                  target="_blank"
+                  referrerPolicy="no-referrer"
+                >
+                  <FaSquareXTwitter size={30} />
+                </Link>
+                <Link
+                  href={"https://www.linkedin.com/in/ashutosh017/"}
+                  target="_blank"
+                  referrerPolicy="no-referrer"
+                >
+                  <FaLinkedin size={30} />
+                </Link>
+                <Link
+                  href={"https://github.com/ashutosh017"}
+                  target="_blank"
+                  referrerPolicy="no-referrer"
+                >
+                  <FaGithub size={30} />
+                </Link>
+                <Link
+                  href={"https://www.youtube.com/@ashutosh__018"}
+                  target="_blank"
+                  referrerPolicy="no-referrer"
+                >
+                  <FaYoutube size={30} />
+                </Link>
+              </div>
             </div>
           </nav>
         )}
       </header>
+
       <BlogForm
         onClose={() => setShowBlogForm(false)}
         isOpen={showBlogForm}

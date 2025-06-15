@@ -32,7 +32,7 @@ export default function Home() {
       <div className="flex text-muted-foreground tracking-widest py-4 text-lg font-medium space-x-2 items-center lg:space-x-8 ">
         Write, Share, Blogs.
       </div>
-      <div className="flex flex-col lg:flex-row gap-5">
+      <div onMouseLeave={toggleTheme} className="flex flex-col lg:flex-row gap-5">
         <Button
           onMouseOver={toggleTheme}
           // onMouseLeave={toggleTheme}

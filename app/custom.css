@@ -1,0 +1,21 @@
+.nav-btn-style {
+  @apply cursor-default  rounded-sm lg:rounded-xl w-full lg:w-fit hover:bg-transparent  hover:text-black hover:dark:text-white
+  flex justify-end border-b-2 lg:border-none
+  ;
+}
+.nav-btn-icon-style {
+  @apply hover:bg-transparent dark:hover:text-white hover:text-black text-black/70 dark:text-white/80
+  
+}
+
+.mob-nav-btn-style {
+    @apply w-full dark:bg-white/90 dark:text-black bg-black/70 text-white flex items-center justify-center py-2.5 font-semibold  
+}
+
+.home-btn-style{
+  @apply text-base lg:text-xl lg:px-12 lg:py-6 px-6 py-3 transition-colors ease-in cursor-pointer 
+}
+
+.primary-btn-style{
+  @apply px-4 py-2 rounded-lg border cursor-pointer border-neutral-700 dark:border-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-sm font-medium
+}

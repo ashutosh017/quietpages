@@ -1,29 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "./custom.css";
 
 @custom-variant dark (&:is(.dark *));
-
-
-
-.nav-btn-style {
-  @apply cursor-default px-4 rounded-sm lg:rounded-xl w-full lg:w-fit hover:bg-transparent  hover:text-black hover:dark:text-white;
-}
-.nav-btn-icon-style {
-  @apply hover:bg-transparent dark:hover:text-white hover:text-black text-black/70 dark:text-white/80;
-}
-
-.mob-nav-btn-style {
-  @apply w-full text-center rounded-md font-semibold   border dark:border-white/80 border-black/70 bg-white/90 text-black/70   hover:bg-neutral-100  dark:hover:bg-neutral-900 dark:bg-black/60 dark:text-white/80 py-2.5 ;
-}
-
-.home-btn-style{
-  @apply text-base lg:text-xl lg:px-12 lg:py-6 px-6 py-3 transition-colors ease-in cursor-pointer
-}
-
-.primary-btn-style{
-  @apply flex items-center gap-2 px-4 py-2 rounded-lg border border-neutral-700 dark:border-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-sm font-medium
-}
-
 
 @theme inline {
   --color-background: var(--background);
