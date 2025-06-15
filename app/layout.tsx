@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     "siteName":"QuietPages. Write, Share, Blogs.",
     images: [
       {
-        url: "https://quietpages.ashutosh007.xyz/opengraph-image.png", // Replace with your actual Open Graph image URL
+        url: "https://quietpages.ashutosh007.xyz/opengraph-image.png", 
         width: 1200,
         height: 630,
         alt: "QuietPages",
@@ -60,7 +60,7 @@ export const metadata: Metadata = {
     title: "QuietPages",
     description:
       "A platform for writing and sharing blogs with your friends and family.",
-    images: ["https://quietpages.ashutosh007.xyz/opengraph-image.png"], // Replace with your actual Twitter card image URL
+    images: ["https://quietpages.ashutosh007.xyz/opengraph-image.png"], 
   },
 };
 

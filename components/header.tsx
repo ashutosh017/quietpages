@@ -21,6 +21,7 @@ import {
   Home,
   Layers,
   Layers2,
+  LogIn,
   LogOut,
   Menu,
   Moon,
@@ -130,7 +131,16 @@ export default function Header() {
               <FaGithub className="w-5 h-5" />
             </Link>
 
-            <Button
+          
+            <SignedOut>
+              <Button variant="outline" asChild>
+                <SignInButton />
+              </Button>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+              <Button
               className="nav-btn-icon-style "
               onClick={themeToggle}
               size={"icon"}
@@ -143,14 +153,6 @@ export default function Header() {
                 <Sun className="w-6 h-6" />
               )}
             </Button>
-            <SignedOut>
-              <Button variant="outline" asChild>
-                <SignInButton />
-              </Button>
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
             {isMenuOpen ? (
               <X onClick={toggleMenu} className="lg:hidden" />
             ) : (
@@ -232,17 +234,7 @@ export default function Header() {
             </Button>
 
             <div className="flex flex-col items-center mt-4 gap-4 w-full ">
-              <SignedOut>
-                <Button
-                  onClick={toggleMenu}
-                  className="mob-nav-btn-style"
-                  variant="outline"
-                  asChild
-                >
-                  <SignInButton />
-                </Button>
-              </SignedOut>
-              <Link
+                <Link
                 href="https://github.com/ashutosh017/quietpages"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -259,6 +251,21 @@ export default function Header() {
                   </div>
                 </Button>
               </Link>
+              <SignedOut>
+                <Button
+                  onClick={toggleMenu}
+                  className="mob-nav-btn-style"
+                  variant="outline"
+                  asChild
+                >
+               <SignInButton>
+                    <div className="flex items-center justify-center">
+                      Sign in <LogIn/>
+                    </div>
+                  </SignInButton>
+                </Button>
+              </SignedOut>
+            
               <SignedIn>
                 <Button
                   onClick={toggleMenu}
@@ -273,6 +280,7 @@ export default function Header() {
                   </SignOutButton>
                 </Button>
               </SignedIn>
+              
             </div>
             <div>
               <div className="mt-4 mb-2 py-2 font-bold text-center text-lg ">
