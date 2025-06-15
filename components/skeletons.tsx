@@ -1,7 +1,7 @@
-import { Skeleton } from "@/components/ui/skeleton"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Button } from "./ui/button"
-import { Plus } from "lucide-react"
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Button } from "./ui/button";
+import { Plus } from "lucide-react";
 
 export function BlogCardSkeleton() {
   return (
@@ -25,20 +25,24 @@ export function BlogCardSkeleton() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 export function BlogListSkeleton() {
   return (
-    <div className="space-y-6">
-        <Button asChild variant={"ghost"}><Skeleton className="text-transparent"><Plus/> Create One</Skeleton></Button>
+    <div className="space-y-6 max-w-3xl px-4 mx-auto">
+      <div className="flex justify-between items-center">
+        <Skeleton className="w-16 h-5"></Skeleton>
+        <Skeleton className="w-32 h-10 "></Skeleton>
+      </div>
+      <Skeleton className="w-full h-10 my-8"></Skeleton>
       {Array(3)
         .fill(0)
         .map((_, i) => (
           <BlogCardSkeleton key={i} />
         ))}
     </div>
-  )
+  );
 }
 
 export function BlogPageSkeleton() {
@@ -76,5 +80,5 @@ export function BlogPageSkeleton() {
         <Skeleton className="h-9 w-32" />
       </div>
     </div>
-  )
+  );
 }

@@ -44,7 +44,7 @@ export function Footer() {
                   <FaDiscord size={30} />
                 </Link> */}
         </div>
-        <div className="text-md text-muted-foreground ">
+        <div className="text-sm text-balance text-muted-foreground ">
           © {new Date().getFullYear()} QuietPages. All rights reserved.
         </div>
       </div>

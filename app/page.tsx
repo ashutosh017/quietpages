@@ -29,7 +29,7 @@ export default function Home() {
         Welcome, to
         <p className="">QuietPages</p>
       </h1>
-      <div className="flex text-muted-foreground tracking-widest py-4 text-lg font-medium space-x-2 items-center lg:space-x-8 ">
+      <div className="flex text-muted-foreground tracking-widest py-4 lg:py-8 text-lg lg:text-xl space-x-2 items-center lg:space-x-8 ">
         Write, Share, Blogs.
       </div>
       <div onMouseLeave={toggleTheme} className="flex flex-col lg:flex-row gap-5">
