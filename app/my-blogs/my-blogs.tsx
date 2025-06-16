@@ -1,4 +1,4 @@
-import BlogsPage from "@/components/blogs";
+import BlogsPage from "@/components/blogs-page";
 import { prisma } from "@/lib/prisma";
 import { currentUser } from "@clerk/nextjs/server";
 

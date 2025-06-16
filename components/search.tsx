@@ -9,12 +9,13 @@ interface SearchProps {
   onSearch: (query: string) => void
   placeholder?: string
   className?: string
+  query:string
+  setQuery:(query:string)=>void
 }
 
-export function SearchInput({ onSearch, placeholder = "Search blogs...", className }: SearchProps) {
-  const [query, setQuery] = useState("")
+export function SearchInput({ onSearch, query,setQuery,placeholder = "Search blogs...", className }: SearchProps) {
+  // const [query, setQuery] = useState("")
 
-  // Debounce search to avoid too many calls
   useEffect(() => {
     const timer = setTimeout(() => {
       onSearch(query)

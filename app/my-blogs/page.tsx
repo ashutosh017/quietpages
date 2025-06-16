@@ -1,5 +1,5 @@
 
-import BlogsPage from "@/components/blogs";
+import BlogsPage from "@/components/blogs-page";
 import MyBlogs from "@/app/my-blogs/my-blogs";
 import { prisma } from "@/lib/prisma";
 import { Suspense } from "react";

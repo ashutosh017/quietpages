@@ -1,5 +1,15 @@
 "use client";
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,12 +25,13 @@ import { useAuth } from "@clerk/nextjs";
 import { BlogForm } from "@/components/blog-form";
 import { handleCreateBlog } from "@/actions";
 import AuthRequiredPopUp from "@/components/auth-required-popup";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Blog } from "@/lib/generated/prisma";
 import { EmptyState } from "./empty-state";
 import { Input } from "./ui/input";
 import { SearchInput } from "./search";
 import { SearchEmptyState } from "./search-empty-state";
+import { cn } from "@/lib/utils";
 
 function truncateContent(content: string, wordLimit = 20): string {
   const words = content.split(" ");
@@ -34,9 +45,11 @@ export default function BlogsPage({ blogs }: { blogs: Blog[] }) {
   const [showAuthRequiredPopup, setShowAuthRequiredPopup] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
-  const handleSearch = (query: string) => {
+  const [currentPage, setCurrentPage] = useState(1);
+  const handleSearch = useCallback((query: string) => {
+    console.log("redef")
     setSearchQuery(query);
-  };
+  },[])
 
   if (blogs.length === 0) {
     return (
@@ -83,7 +96,14 @@ export default function BlogsPage({ blogs }: { blogs: Blog[] }) {
   const showSearchEmptyState = !loading && isSearching && !hasSearchResults;
   const showResults =
     !loading && (hasSearchResults || (!isSearching && blogs.length > 0));
+  const blogsPerPage = 10;
+  const startIndex = (currentPage - 1) * blogsPerPage;
+  const endIndex = startIndex + blogsPerPage;
 
+  const paginatedBlogs = filteredBlogs.slice(startIndex, endIndex);
+  const lastPage = Math.ceil(filteredBlogs.length / blogsPerPage);
+
+  console.log("lastPage: ", lastPage);
   return (
     <div className="container min-h-screen mx-auto px-4 py-18 lg:py-24 max-w-3xl">
       <div className="mb-6 flex w-full items-center justify-between mx-auto">
@@ -116,7 +136,7 @@ export default function BlogsPage({ blogs }: { blogs: Blog[] }) {
       <div className="flex w-full items-center gap-4 mb-4">
         {!loading && blogs.length > 0 && (
           <div className="mb-8 w-full">
-            <SearchInput onSearch={handleSearch} className="w-full" />
+            <SearchInput query={searchQuery} setQuery={setSearchQuery} onSearch={handleSearch} className="w-full" />
             {isSearching && (
               <div className="mt-3 text-sm text-muted-foreground">
                 {filteredBlogs.length} result
@@ -139,7 +159,7 @@ export default function BlogsPage({ blogs }: { blogs: Blog[] }) {
         <SearchEmptyState query={searchQuery} onClearSearch={clearSearch} />
       ) : showResults ? (
         <div className="space-y-6">
-          {filteredBlogs.map((blog) => (
+          {paginatedBlogs.map((blog) => (
             <Link key={blog.id} href={`/blog/${blog.id}`}>
               <Card className="group border border-border/40 hover:border-border hover:shadow-sm transition-all duration-200 cursor-pointer bg-card/50 hover:bg-card mb-4">
                 <CardHeader className="">
@@ -187,6 +207,68 @@ export default function BlogsPage({ blogs }: { blogs: Blog[] }) {
           ))}
         </div>
       ) : null}
+
+        {filteredBlogs.length>blogsPerPage&&<Pagination className="mt-8">
+          <PaginationContent className="flex justify-between lg:justify-center lg:gap-8 w-full px-1 ">
+            <PaginationItem>
+              <PaginationPrevious
+                isActive={currentPage > 1}
+                className={cn(
+                  currentPage === 1 ? "pointer-events-none opacity-80" : "",
+                  "cursor-pointer"
+                )}
+                onClick={() => setCurrentPage(currentPage - 1)}
+              />
+            </PaginationItem>
+            <div className="flex gap-2">
+              {currentPage - 1 > 1 && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
+              {Array.from({ length: lastPage }, (_, i) => i + 1)
+                .slice(
+                  currentPage - 2 < 0 ? 0 : currentPage - 2,
+                  currentPage === 1
+                    ? currentPage + 2 > lastPage
+                      ? lastPage
+                      : currentPage + 2
+                    : currentPage + 1
+                )
+                .map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      className={cn(
+                        "cursor-pointer ",
+                        currentPage === page && "border"
+                      )}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+              {/* <PaginationItem>
+            <PaginationLink href="#">1</PaginationLink>
+          </PaginationItem> */}
+              {currentPage + 1 < lastPage && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
+            </div>
+            <PaginationItem>
+              <PaginationNext
+                isActive={currentPage < lastPage}
+                className={cn(
+                  currentPage === lastPage ? " pointer-events-none opacity-80" : "",
+                  "cursor-pointer"
+                )}
+                onClick={() => setCurrentPage(currentPage + 1)}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>}
       {/* <div className="flex space-y-4 flex-col">
         {blogs.map((blog) => (
           <Link key={blog.id} href={`/blog/${blog.id}`}>
@@ -231,21 +313,21 @@ export default function BlogsPage({ blogs }: { blogs: Blog[] }) {
             </Card>
           </Link>
         ))}
-        <BlogForm
-          isOpen={showCreateForm}
-          onClose={() => setShowCreateForm(false)}
-          onSave={handleCreateBlog}
-          mode={{
-            type: "create",
-            blogId: null,
-          }}
-        />
+          */}
+      <BlogForm
+        isOpen={showCreateForm}
+        onClose={() => setShowCreateForm(false)}
+        onSave={handleCreateBlog}
+        mode={{
+          type: "create",
+          blogId: null,
+        }}
+      />
 
-        <AuthRequiredPopUp
-          isOpen={showAuthRequiredPopup}
-          onClose={() => setShowAuthRequiredPopup(false)}
-        />
-      </div>*/}
+      <AuthRequiredPopUp
+        isOpen={showAuthRequiredPopup}
+        onClose={() => setShowAuthRequiredPopup(false)}
+      />
     </div>
   );
 }
