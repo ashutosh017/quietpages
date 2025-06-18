@@ -3,15 +3,12 @@
 import { razorpay_key_id } from "@/config";
 import axios from "axios";
 import { useRazorpay } from "react-razorpay";
-// import Razorpay from "razorpay";
 
 export default function PaymentPage() {
-  //   const { Razorpay } = useRazorpay();
-  const { error, isLoading, Razorpay } = useRazorpay();
+  const { Razorpay } = useRazorpay();
 
   const handlePayment = async () => {
     try {
-      // Make the API call to backend
       const response = await axios.post("/api/v1/razorpay/create-order", {
         amount: 500,
       });
@@ -20,15 +17,7 @@ export default function PaymentPage() {
       if (response.status !== 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       const order = response.data.order;
-      console.log("Order created:", order);
-
-      // Razorpay options
-      console.log("razorpay key: ", razorpay_key_id);
-      console.log(response.data)
-      
-
       const options = {
         key: razorpay_key_id!,
         amount: order.amount,
@@ -43,24 +32,20 @@ export default function PaymentPage() {
 
               {
                 razorpay_order_id: order.id,
-                razorpay_payment_id: response.data.razorpay_payment_id,
-                razorpay_signature: response.data.razorpay_signature,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
               }
             );
 
-            if (verifyResponse.status!==200) {
+            if (verifyResponse.status !== 200) {
               throw new Error("Payment verification failed");
             }
 
-            const verificationResult =  verifyResponse.data;
+            const verificationResult = verifyResponse.data;
             console.log("Payment verified:", verificationResult);
-            alert("Payment successful!");
           } catch (err) {
             console.error("Payment verification error:", err);
-            alert(
-              "Payment verification failed: " +
-                (err instanceof Error ? err.message : err)
-            );
+         
           }
         },
         prefill: {
@@ -89,7 +74,6 @@ export default function PaymentPage() {
       rzpay.open();
     } catch (err) {
       console.error("Error creating order:", err);
-    
     }
   };
 
@@ -100,7 +84,7 @@ export default function PaymentPage() {
         onClick={handlePayment}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
-        Pay ₹50
+        Pay ₹500
       </button>
     </div>
   );

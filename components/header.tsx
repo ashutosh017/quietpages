@@ -56,7 +56,7 @@ export default function Header() {
     <div>
       <header
         className={cn(
-          " z-10 dark:bg-black/10  fixed top-0 left-0 w-screen py-4 px-4    lg:px-10 xl:px-30  backdrop-blur-md shadow-none dark:shadow-white/10"
+          " z-10 bg-transparent  fixed top-0 left-0 w-screen py-4 px-4    lg:px-10 xl:px-30  backdrop-blur-md shadow-none dark:shadow-white/10"
         )}
       >
         <div className="flex   justify-between lg:justify-around items-center ">

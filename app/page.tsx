@@ -5,7 +5,6 @@ import { BlogForm } from "@/components/blog-form";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@clerk/nextjs";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -24,11 +23,14 @@ export default function Home() {
   const [showBlogForm, setShowBlogForm] = useState(false);
   const { isSignedIn } = useAuth();
   return (
-    <div className="text-black/80 dark:text-white/90 h-screen flex flex-col items-center justify-center  text-center">
-      <h1 className="text-5xl lg:text-9xl font-extrabold    lg:px-32">
-        Welcome, to
-        <p className="">QuietPages</p>
-      </h1>
+    <div className=" text-black/80 dark:text-white/90 h-screen flex flex-col items-center justify-center text-center ">
+      <h1 className="text-5xl lg:text-9xl font-extrabold lg:px-32 drop-shadow-[0_3px_3px_rgba(0,0,0,0.4)] dark:drop-shadow-[0_3px_3px_rgba(255,255,255,0.25)]">
+  Welcome, to
+  <p className="">
+    QuietPages
+  </p>
+</h1>
+
       <div className="flex text-muted-foreground tracking-widest py-4 lg:py-8 text-lg lg:text-xl space-x-2 items-center lg:space-x-8 ">
         Write, Share, Blogs.
       </div>
