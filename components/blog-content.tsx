@@ -9,6 +9,7 @@ import {
   Edit,
   Trash2,
   MoreHorizontal,
+  Share2,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -20,11 +21,19 @@ import { useState } from "react";
 import { Blog } from "@/types";
 import Image from "next/image";
 import { ImageLightbox } from "@/components/image-ligtbox";
-import { useRouter } from "next/router";
-import { DeleteConfirmation } from "../../../components/delete-confirmation";
-import { BlogForm } from "../../../components/blog-form";
+import { DeleteConfirmation } from "./delete-confirmation";
+import { BlogForm } from "./blog-form";
 import { useAuth, useUser } from "@clerk/nextjs";
 import { handleDeleteBlog, handleUpdateBlog } from "@/actions";
+
+import Linkify from "linkify-react";
+import { ShareBlog } from "./share-blog";
+
+const linkifyOptions = {
+  target: "_blank",
+  rel: "noopener noreferrer",
+  className: "text-blue-600 dark:text-blue-300 underline",
+};
 
 export default function BlogContent({ blog }: { blog: Blog }) {
   const { isSignedIn } = useAuth();
@@ -37,41 +46,58 @@ export default function BlogContent({ blog }: { blog: Blog }) {
     setLightboxIndex(index);
     setLightboxOpen(true);
   };
-  console.log("user.id: ",user?.id)
-  console.log("userId: ",blog.userId)
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  console.log("user.id: ", user?.id);
+  console.log("userId: ", blog.userId);
 
   return (
     <div className="container min-h-screen  mx-auto px-4 py-24 max-w-2xl">
       <div className="mb-4">
         <div className="flex items-center justify-between mb-8">
-            <Button onClick={()=>{
-              window.history.back()
-            }} variant="ghost" size="sm" className="-ml-3">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
+          <Button
+            onClick={() => {
+              window.history.back();
+            }}
+            variant="ghost"
+            size="sm"
+            className="-ml-3"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          <div className="flex gap-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setShowShareDialog(true)}
+              className="gap-2"
+            >
+              <Share2 className="w-4 h-4" />
+              Share
             </Button>
-          {isSignedIn && user?.id === blog.userId && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm">
-                  <MoreHorizontal className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setShowEditForm(true)}>
-                  <Edit className="w-4 h-4 mr-2" />
-                  Edit
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => setShowDeleteDialog(true)}
-                  className="text-red-600 focus:text-red-600"
-                >
-                  <Trash2 className="w-4 h-4 mr-2" />
-                  Delete
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+            {isSignedIn && user?.id === blog.userId && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <MoreHorizontal className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setShowEditForm(true)}>
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => setShowDeleteDialog(true)}
+                    className="text-red-600 focus:text-red-600"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+          </div>
         </div>
 
         <h1 className="text-2xl font-medium mb-6 leading-relaxed">
@@ -96,7 +122,8 @@ export default function BlogContent({ blog }: { blog: Blog }) {
 
       <article className="prose prose-neutral max-w-none">
         <p className="text-foreground leading-relaxed text-base whitespace-pre-line">
-          {blog?.content}
+          {/* {blog?.content} */}
+          <Linkify options={linkifyOptions}>{blog?.content}</Linkify>
         </p>
       </article>
       {blog && blog.images && blog.images.length > 0 && (
@@ -130,12 +157,10 @@ export default function BlogContent({ blog }: { blog: Blog }) {
       )}
 
       <div className="mt-12 pt-8 border-t border-border/40">
-          <Button onClick={()=>
-            window.history.back()
-          } variant="ghost" size="sm">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to all posts
-          </Button>
+        <Button onClick={() => window.history.back()} variant="ghost" size="sm">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back to all posts
+        </Button>
       </div>
       {lightboxOpen && blog && blog.images && (
         <ImageLightbox
@@ -150,19 +175,25 @@ export default function BlogContent({ blog }: { blog: Blog }) {
         onClose={() => setShowEditForm(false)}
         onSave={handleUpdateBlog}
         mode={{
-          type:"edit",
-          blogId:blog.id
+          type: "edit",
+          blogId: blog.id,
         }}
       />
 
       <DeleteConfirmation
         isOpen={showDeleteDialog}
         onClose={() => setShowDeleteDialog(false)}
-        onConfirm={()=>{
-          handleDeleteBlog(blog.id)
-          setShowDeleteDialog(false)
+        onConfirm={() => {
+          handleDeleteBlog(blog.id);
+          setShowDeleteDialog(false);
         }}
         title={blog.title}
+      />
+      <ShareBlog
+        isOpen={showShareDialog}
+        onClose={() => setShowShareDialog(false)}
+        title={blog.title}
+        slug={blog.title}
       />
     </div>
   );

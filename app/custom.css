@@ -1,5 +1,5 @@
 .nav-btn-style {
-  @apply cursor-default  rounded-sm lg:rounded-xl w-full lg:w-fit hover:bg-transparent  hover:text-black hover:dark:text-white
+  @apply cursor-default  rounded-b-xs lg:rounded-xl w-full lg:w-fit hover:bg-transparent  hover:text-black hover:dark:text-white
   flex justify-end border-b-2 lg:border-none
   ;
 }

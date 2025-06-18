@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import BlogContent from "./blog-content";
+import BlogContent from "../../../components/blog-content";
 interface BlogPageProps {
   params: Promise<{ id: string }>;
 }
