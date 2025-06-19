@@ -61,9 +61,11 @@ export default function Header() {
       >
         <div className="flex   justify-between lg:justify-around items-center ">
           <Link href={"/"} className="w-fit lg:w-44 ">
-            <h1 className="font-semibold text-xl lg:text-2xl lg:font-bold">QuietPages</h1>
+            <h1 className="font-semibold text-xl lg:text-2xl lg:font-bold">
+              QuietPages
+            </h1>
           </Link>
-          <nav className="hidden top-4 left-1/2  lg:flex items-center justify-between px-6 py-2  w-fit rounded-4xl  dark:bg-black/30 border shadow-lg    dark:shadow-white/10  gap-2">
+          <nav className="hidden top-4 left-1/2  lg:flex items-center justify-between px-6 py-2  w-fit rounded-4xl  dark:bg-background/90 border dark:border-neutral-400 bg-neutral-50 border-neutral-600 shadow-lg    dark:shadow-white/10  gap-2">
             <Button
               variant="ghost"
               className={`nav-btn-style ${
@@ -131,7 +133,6 @@ export default function Header() {
               <FaGithub className="w-5 h-5" />
             </Link>
 
-          
             <SignedOut>
               <Button variant="outline" asChild>
                 <SignInButton />
@@ -140,7 +141,7 @@ export default function Header() {
             <SignedIn>
               <UserButton />
             </SignedIn>
-              <Button
+            <Button
               className="nav-btn-icon-style "
               onClick={themeToggle}
               size={"icon"}
@@ -234,7 +235,7 @@ export default function Header() {
             </Button>
 
             <div className="flex flex-col items-center mt-4 gap-4 w-full ">
-                <Link
+              <Link
                 href="https://github.com/ashutosh017/quietpages"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -258,14 +259,14 @@ export default function Header() {
                   variant="outline"
                   asChild
                 >
-               <SignInButton>
+                  <SignInButton>
                     <div className="flex items-center justify-center">
-                      Sign in <LogIn/>
+                      Sign in <LogIn />
                     </div>
                   </SignInButton>
                 </Button>
               </SignedOut>
-            
+
               <SignedIn>
                 <Button
                   onClick={toggleMenu}
@@ -280,7 +281,6 @@ export default function Header() {
                   </SignOutButton>
                 </Button>
               </SignedIn>
-              
             </div>
             <div>
               <div className="mt-4 mb-2 py-2 font-bold text-center text-lg ">
