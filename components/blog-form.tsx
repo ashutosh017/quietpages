@@ -40,6 +40,7 @@ export function BlogForm({
   });
   const [nextSuggestedContentWord, setNextSuggestedContentWord] = useState("");
   const [suggestion, setSuggestion] = useState("");
+  const [inFocus, setInFocus] = useState("");
   const debouncedValue = useDebounce(formData.title, 1000);
   const debouncedContentValue = useDebounce(formData.content, 1000);
   const isPending = useRef(false);
@@ -71,7 +72,7 @@ export function BlogForm({
         const result = await generateBlogTitle(nextToExecuteRef.current);
         lastResolvedValue.current = result;
         if (debouncedValue === lastExecutedValue.current)
-        setSuggestion(result || "");
+          setSuggestion(result || "");
       } catch (err) {
       } finally {
         isPending.current = false;
@@ -85,23 +86,20 @@ export function BlogForm({
   ) => {
     if (e.key === "Tab" && (suggestion || nextSuggestedContentWord)) {
       e.preventDefault();
-      if (suggestion) {
+      if (suggestion && inFocus === "input") {
         setFormData((prev) => ({
           ...prev,
           title: suggestion,
         }));
         setSuggestion("");
       }
-      if (nextSuggestedContentWord) {
+      if (nextSuggestedContentWord && inFocus === "textarea") {
         setFormData((prev) => ({
           ...prev,
-          content: formData.content +" "+ nextSuggestedContentWord,
+          content: formData.content + " " + nextSuggestedContentWord,
         }));
         setNextSuggestedContentWord("");
       }
-    } else if (e.key !== "Shift") {
-      setSuggestion("");
-      setNextSuggestedContentWord("");
     }
   };
 
@@ -205,31 +203,35 @@ export function BlogForm({
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
 
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => handleChange("title", e.target.value)}
-                placeholder="Enter blog title"
-                required
-                onKeyDown={handleKeyDown}
-                autoComplete="off"
-                className="px-3 py-2 "
-              />
-              <div className="relative inset-0 text-muted-foreground pointer-events-none w-full h-full px-3 py-2 font-medium whitespace-nowrap overflow-hidden">
-                {suggestion && (
-                  <span className="text-gray-400  lg:text-sm">
-                    {suggestion}
-                  </span>
-                )}
-              </div>
+            <Input
+              id="title"
+              value={formData.title}
+              onFocus={() => setInFocus("input")}
+              onChange={(e) => handleChange("title", e.target.value)}
+              placeholder="Enter blog title"
+              required
+              onKeyDown={handleKeyDown}
+              autoComplete="off"
+              className="px-3 py-2 "
+            />
+            <div className="relative inset-0 text-muted-foreground pointer-events-none w-full h-full px-3 py-2 font-medium whitespace-nowrap overflow-hidden">
+              {suggestion && (
+                <span className="text-gray-400  lg:text-sm">{suggestion}</span>
+              )}
             </div>
+          </div>
 
           <div className="space-y-2">
-            <Label htmlFor="content">Content</Label>
+<div className="flex justify-between">
+              <Label htmlFor="content">Content</Label>
+            {/* <span className="text-xs font-semibold ">AI is thinking...</span> */}
+
+</div>
 
             <div className="relative">
               {/* User Input */}
               <Textarea
+                onFocus={() => setInFocus("textarea")}
                 id="content"
                 value={formData.content}
                 onChange={(e) => handleChange("content", e.target.value)}
@@ -245,7 +247,7 @@ export function BlogForm({
                 className="absolute inset-0 w-full min-h-[200px] px-3 py-2 md:text-sm leading-[1.5] box-border pointer-events-none z-0 whitespace-pre-wrap break-words text-gray-400"
                 aria-hidden="true"
               >
-                <span className="invisible">{formData.content + " " }</span>
+                <span className="invisible">{formData.content + " "}</span>
                 <span className="">{nextSuggestedContentWord}</span>
               </div>
             </div>
