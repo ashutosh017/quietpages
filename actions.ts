@@ -9,7 +9,8 @@ import {
 import { Blog, Mode } from "./types";
 import crypto from "crypto";
 import { prisma } from "./lib/prisma";
-
+import { ai } from "./lib/gemini";
+  const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
 export const handleCreateBlog = async (
   blog: Omit<Blog, "id" | "dateCreated">,
   mode: Mode
@@ -157,3 +158,27 @@ export const deleteImageFromCloudinary = async (
     console.error("Cloudinary deletion failed", error.response?.data || error);
   }
 };
+
+
+export const generateBlogTitle = async (query: string) => {
+  const prompt = `Rewrite or complete this blog title. Respond with the improved title only. Input: ${query}`;
+  const stream = await model.generateContentStream([{ text: prompt }]);
+
+  let full = "";
+  for await (const chunk of stream.stream) {
+    full += chunk.text();
+  }
+  return full.trim();
+};
+
+export const guessTheNextWord = async (query: string) => {
+  const prompt = `Predict the next word(s) of this paragraph. Reply with only the continuation. Input: ${query}`;
+  const stream = await model.generateContentStream([{ text: prompt }]);
+
+  let full = "";
+  for await (const chunk of stream.stream) {
+    full += chunk.text();
+  }
+  return full.trim();
+};
+

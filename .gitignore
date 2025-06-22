@@ -46,3 +46,7 @@ next-env.d.ts
 /lib/generated/prisma
 
 
+#additional
+note.txt
+test.js
+check.txt

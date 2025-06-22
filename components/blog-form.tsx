@@ -2,7 +2,7 @@
 
 import type React from "react";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,14 +16,16 @@ import {
 } from "@/components/ui/dialog";
 import { X, Upload, Plus } from "lucide-react";
 import Image from "next/image";
-import { Blog, BlogFormProps, SelectedImage } from "@/types";
+import { BlogFormProps, SelectedImage } from "@/types";
 import axios from "axios";
-import { deleteImageFromCloudinary } from "@/actions";
+import {
+  deleteImageFromCloudinary,
+  generateBlogTitle,
+  guessTheNextWord,
+} from "@/actions";
 import { useUser } from "@clerk/nextjs";
-
-const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET;
-const cloudinaryCloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-
+import { useDebounce } from "@/hooks/UseDebounce";
+import { cloudinaryCloudName, cloudinaryPreset } from "@/config";
 
 export function BlogForm({
   blog,
@@ -36,13 +38,78 @@ export function BlogForm({
     title: blog?.title || "",
     content: blog?.content || "",
   });
-  const {user} = useUser()
+  const [nextSuggestedContentWord, setNextSuggestedContentWord] = useState("");
+  const [suggestion, setSuggestion] = useState("");
+  const debouncedValue = useDebounce(formData.title, 1000);
+  const debouncedContentValue = useDebounce(formData.content, 1000);
+  const isPending = useRef(false);
+  const nextToExecuteRef = useRef("");
+  const lastResolvedValue = useRef("");
+  const lastExecutedValue = useRef("");
+  useEffect(() => {
+    if (!debouncedContentValue) return;
+    (async () => {
+      const res = await guessTheNextWord(debouncedContentValue);
+      setNextSuggestedContentWord(res);
+    })();
+  }, [debouncedContentValue]);
+  useEffect(() => {
+    if (!debouncedValue.trim()) {
+      setSuggestion("");
+      return;
+    }
+    nextToExecuteRef.current = debouncedValue;
+    if (
+      isPending.current ||
+      lastExecutedValue.current === nextToExecuteRef.current
+    )
+      return;
+    (async () => {
+      try {
+        isPending.current = true;
+        lastExecutedValue.current = nextToExecuteRef.current;
+        const result = await generateBlogTitle(nextToExecuteRef.current);
+        lastResolvedValue.current = result;
+        if (debouncedValue === lastExecutedValue.current)
+        setSuggestion(result || "");
+      } catch (err) {
+      } finally {
+        isPending.current = false;
+      }
+    })();
+  }, [debouncedValue, lastResolvedValue.current]);
+
+  const { user } = useUser();
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (e.key === "Tab" && (suggestion || nextSuggestedContentWord)) {
+      e.preventDefault();
+      if (suggestion) {
+        setFormData((prev) => ({
+          ...prev,
+          title: suggestion,
+        }));
+        setSuggestion("");
+      }
+      if (nextSuggestedContentWord) {
+        setFormData((prev) => ({
+          ...prev,
+          content: formData.content +" "+ nextSuggestedContentWord,
+        }));
+        setNextSuggestedContentWord("");
+      }
+    } else if (e.key !== "Shift") {
+      setSuggestion("");
+      setNextSuggestedContentWord("");
+    }
+  };
 
   const [selectedImages, setSelectedImages] = useState<SelectedImage[]>(
     blog?.images?.map((url, index) => ({
-      assetId:'',
-      publicId:'',
-      url:''
+      assetId: "",
+      publicId: "",
+      url: "",
     })) || []
   );
 
@@ -54,13 +121,16 @@ export function BlogForm({
     const images =
       selectedImages.length > 0 ? selectedImages.map((img) => img.url) : [];
 
-    onSave({
-      userId: user?.id!,
-      title: formData.title,
-      content: formData.content,
-      author: user?.fullName ?? "anonymous", 
-      images,
-    },mode);
+    onSave(
+      {
+        userId: user?.id!,
+        title: formData.title,
+        content: formData.content,
+        author: user?.fullName ?? "anonymous",
+        images,
+      },
+      mode
+    );
 
     setFormData({ title: "", content: "" });
     setSelectedImages([]);
@@ -81,8 +151,8 @@ export function BlogForm({
       const imageFormData = new FormData();
       imageFormData.append("file", file);
 
-      imageFormData.append("upload_preset", cloudinaryPreset);
-      imageFormData.append("cloud_name", cloudinaryCloudName);
+      imageFormData.append("upload_preset", cloudinaryPreset!);
+      imageFormData.append("cloud_name", cloudinaryCloudName!);
 
       const cloudinaryRes = await axios.post(
         `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/image/upload`,
@@ -90,10 +160,10 @@ export function BlogForm({
       );
       const imageUrl = cloudinaryRes.data.secure_url;
       const assetId = cloudinaryRes.data.asset_id;
-      const publicId= cloudinaryRes.data.public_id;
+      const publicId = cloudinaryRes.data.public_id;
       const newImage: SelectedImage = {
         assetId: assetId,
-        publicId:publicId,
+        publicId: publicId,
         url: imageUrl,
         file,
       };
@@ -107,10 +177,12 @@ export function BlogForm({
   };
 
   const removeImage = (assetId: string) => {
-    const publicId = selectedImages.find((img) => img.assetId === assetId)?.publicId;
+    const publicId = selectedImages.find(
+      (img) => img.assetId === assetId
+    )?.publicId;
     if (!publicId) return;
 
-     deleteImageFromCloudinary(publicId,assetId);
+    deleteImageFromCloudinary(publicId, assetId);
 
     setSelectedImages((prev) => prev.filter((img) => img.assetId !== assetId));
   };
@@ -118,9 +190,10 @@ export function BlogForm({
   const handleAddMoreImages = () => {
     fileInputRef.current?.click();
   };
+  const containerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Dialog  open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="w-3xl max-h-[90vh] bg-white dark:bg-black/70 backdrop-blur-xl overflow-y-auto  ">
         <DialogHeader>
           <DialogTitle>
@@ -128,29 +201,54 @@ export function BlogForm({
           </DialogTitle>
         </DialogHeader>
 
-
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="title">Title</Label>
-            <Input
-              id="title"
-              value={formData.title}
-              onChange={(e) => handleChange("title", e.target.value)}
-              placeholder="Enter blog title"
-              required
-            />
-          </div>
+
+              <Input
+                id="title"
+                value={formData.title}
+                onChange={(e) => handleChange("title", e.target.value)}
+                placeholder="Enter blog title"
+                required
+                onKeyDown={handleKeyDown}
+                autoComplete="off"
+                className="px-3 py-2 "
+              />
+              <div className="relative inset-0 text-muted-foreground pointer-events-none w-full h-full px-3 py-2 font-medium whitespace-nowrap overflow-hidden">
+                {suggestion && (
+                  <span className="text-gray-400  lg:text-sm">
+                    {suggestion}
+                  </span>
+                )}
+              </div>
+            </div>
 
           <div className="space-y-2">
             <Label htmlFor="content">Content</Label>
-            <Textarea
-              id="content"
-              value={formData.content}
-              onChange={(e) => handleChange("content", e.target.value)}
-              placeholder="Write your blog content here..."
-              className="min-h-[200px]"
-              required
-            />
+
+            <div className="relative">
+              {/* User Input */}
+              <Textarea
+                id="content"
+                value={formData.content}
+                onChange={(e) => handleChange("content", e.target.value)}
+                placeholder="Write your blog content here..."
+                className="w-full min-h-[200px] px-3 py-2 text-base leading-[1.5] box-border bg-transparent relative z-10"
+                onKeyDown={handleKeyDown}
+                required
+              />
+
+              {/* Ghost Text Behind */}
+              <div
+                ref={containerRef}
+                className="absolute inset-0 w-full min-h-[200px] px-3 py-2 md:text-sm leading-[1.5] box-border pointer-events-none z-0 whitespace-pre-wrap break-words text-gray-400"
+                aria-hidden="true"
+              >
+                <span className="invisible">{formData.content + " " }</span>
+                <span className="">{nextSuggestedContentWord}</span>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-4">

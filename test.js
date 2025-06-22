@@ -19,30 +19,30 @@
 // const arr2 = arr.slice(9,12);
 // console.log(arr2)
 
-const fs = require("fs");
-class myPromise {
-  constructor(fn) {
-    function afterDone(value) {
-      this.resolve(value);
-    }
-    function afterFail() {}
-    fn(afterDone.bind(this), afterFail)
-  }
+// const fs = require("fs");
+// class myPromise {
+//   constructor(fn) {
+//     function afterDone(value) {
+//       this.resolve(value);
+//     }
+//     function afterFail() {}
+//     fn(afterDone.bind(this), afterFail)
+//   }
 
-  then(cb) {
-    this.resolve = cb;
-  }
-}
+//   then(cb) {
+//     this.resolve = cb;
+//   }
+// }
 
-function myFunction(resolve) {
-  fs.readFile("a.txt", "utf-8", function (err, data) {
-    resolve(data);
-  });
-}
+// function myFunction(resolve) {
+//   fs.readFile("a.txt", "utf-8", function (err, data) {
+//     resolve(data);
+//   });
+// }
 
-function callback() {
-  console.log("successfully made a promise class");
-}
+// function callback() {
+//   console.log("successfully made a promise class");
+// }
 
-let p = new myPromise(myFunction);
-p.then(callback);
+// let p = new myPromise(myFunction);
+// p.then(callback);

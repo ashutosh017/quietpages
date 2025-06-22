@@ -1,8 +1,8 @@
 "use client";
 
 import { handleCreateBlog } from "@/actions";
+import AuthRequiredPopUp from "@/components/auth-required-popup";
 import { BlogForm } from "@/components/blog-form";
-import StarField from "@/components/start-field";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -49,6 +49,9 @@ export default function Home() {
   const [showBlogForm, setShowBlogForm] = useState(false);
   const { isSignedIn } = useAuth();
    const { Razorpay } = useRazorpay();
+   const [showSigninPopup, setshowSigninPopup] = useState(false)
+   
+  
   
     const handlePayment = async () => {
       try {
@@ -65,7 +68,7 @@ export default function Home() {
           key: razorpay_key_id!,
           amount: order.amount,
           currency: order.currency,
-          name: "Your Company Name",
+          name: "QuietPages",
           description: "Payment for your order",
           order_id: order.id,
           handler: async (response: any) => {
@@ -133,7 +136,7 @@ export default function Home() {
         <div className="flex flex-col lg:flex-row gap-5 ">
           <Button
             onClick={() => {
-              isSignedIn ? setShowBlogForm(true) : router.push("/sign-in");
+              isSignedIn ? setShowBlogForm(true) : setshowSigninPopup(true);
             }}
             className={cn(
               "bg-neutral-800 text-neutral-50",
@@ -157,7 +160,7 @@ export default function Home() {
         </div>
       </div>
       <div>
-        <section className="container mx-auto px-4 py-20">
+        <section className="container mx-auto px-4 ">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Choose Your Writing Journey
@@ -277,6 +280,10 @@ export default function Home() {
           blogId: null,
         }}
       />
+        <AuthRequiredPopUp
+              isOpen={showSigninPopup}
+              onClose={() => setshowSigninPopup(false)}
+            />
     </div>
   );
 }

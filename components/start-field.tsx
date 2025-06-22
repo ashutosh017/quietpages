@@ -20,7 +20,7 @@ const StarField = () => {
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none -z-40">
       {/* Background gradient - adapts to theme */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-200 via-white to-slate-300 dark:from-black dark:via-gray-900 dark:to-black transition-colors duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-200 via-white to-slate-300 dark:from-black dark:via-neutral-900 dark:to-black transition-colors duration-500" />
       
       {/* Small stars */}
       <div className="absolute inset-0">
