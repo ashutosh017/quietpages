@@ -39,19 +39,44 @@ export function BlogForm({
     content: blog?.content || "",
   });
   const [nextSuggestedContentWord, setNextSuggestedContentWord] = useState("");
+  const [aiIsThinkingTitle, setAiIsThinkingTitle] = useState(false);
+  const [aiIsThinkingContent, setAiIsThinkingContent] = useState(false);
   const [suggestion, setSuggestion] = useState("");
   const [inFocus, setInFocus] = useState("");
   const debouncedValue = useDebounce(formData.title, 1000);
   const debouncedContentValue = useDebounce(formData.content, 1000);
   const isPending = useRef(false);
+  const isPendingForContent = useRef(false);
   const nextToExecuteRef = useRef("");
+  const nextToExecuteRefForContent = useRef("");
   const lastResolvedValue = useRef("");
+  const lastResolvedValueForContent = useRef("");
   const lastExecutedValue = useRef("");
+  const lastExecutedValueForContent = useRef("");
   useEffect(() => {
     if (!debouncedContentValue) return;
+    nextToExecuteRefForContent.current = debouncedContentValue;
+    if (
+      isPendingForContent.current ||
+      lastExecutedValueForContent.current === nextToExecuteRefForContent.current
+    )
+      return;
     (async () => {
-      const res = await guessTheNextWord(debouncedContentValue);
-      setNextSuggestedContentWord(res);
+      try {
+        setAiIsThinkingContent(true);
+        isPendingForContent.current = true;
+        lastExecutedValueForContent.current =
+          nextToExecuteRefForContent.current;
+        const res = await guessTheNextWord(debouncedContentValue);
+        setAiIsThinkingContent(false);
+        lastResolvedValueForContent.current = res;
+        if (debouncedContentValue === lastExecutedValueForContent.current)
+          setNextSuggestedContentWord(res);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        isPendingForContent.current = false;
+      }
     })();
   }, [debouncedContentValue]);
   useEffect(() => {
@@ -67,6 +92,7 @@ export function BlogForm({
       return;
     (async () => {
       try {
+        setAiIsThinkingTitle(true);
         isPending.current = true;
         lastExecutedValue.current = nextToExecuteRef.current;
         const result = await generateBlogTitle(nextToExecuteRef.current);
@@ -74,8 +100,10 @@ export function BlogForm({
         if (debouncedValue === lastExecutedValue.current)
           setSuggestion(result || "");
       } catch (err) {
+        console.log(err);
       } finally {
         isPending.current = false;
+        setAiIsThinkingTitle(false);
       }
     })();
   }, [debouncedValue, lastResolvedValue.current]);
@@ -201,7 +229,25 @@ export function BlogForm({
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <div className="flex justify-between">
+              <Label htmlFor="title">Title</Label>
+              {aiIsThinkingTitle && (
+                <div className="flex items-center justify-center gap-2 text-xs font-semibold text-muted-foreground">
+                  <span>AI is thinking</span>
+                  <div className="flex gap-1 text-primary text-xs font-bold items-center">
+                    <span className="animate-[glow-dot_1.4s_infinite_0s]">
+                      •
+                    </span>
+                    <span className="animate-[glow-dot_1.4s_infinite_0.2s]">
+                      •
+                    </span>
+                    <span className="animate-[glow-dot_1.4s_infinite_0.4s]">
+                      •
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <Input
               id="title"
@@ -222,11 +268,25 @@ export function BlogForm({
           </div>
 
           <div className="space-y-2">
-<div className="flex justify-between">
+            <div className="flex justify-between">
               <Label htmlFor="content">Content</Label>
-            {/* <span className="text-xs font-semibold ">AI is thinking...</span> */}
-
-</div>
+              {aiIsThinkingContent && (
+                <div className="flex items-center justify-center gap-2 text-xs font-semibold text-muted-foreground">
+                  <span>AI is thinking</span>
+                  <div className="flex gap-1 text-primary text-xs font-bold items-center">
+                    <span className="animate-[glow-dot_1.4s_infinite_0s]">
+                      •
+                    </span>
+                    <span className="animate-[glow-dot_1.4s_infinite_0.2s]">
+                      •
+                    </span>
+                    <span className="animate-[glow-dot_1.4s_infinite_0.4s]">
+                      •
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
 
             <div className="relative">
               {/* User Input */}
@@ -241,14 +301,15 @@ export function BlogForm({
                 required
               />
 
-              {/* Ghost Text Behind */}
               <div
                 ref={containerRef}
-                className="absolute inset-0 w-full min-h-[200px] px-3 py-2 md:text-sm leading-[1.5] box-border pointer-events-none z-0 whitespace-pre-wrap break-words text-gray-400"
+                className="absolute inset-0 w-full min-h-[200px]  md:text-sm leading-[1.5] box-border pointer-events-none z-0 whitespace-pre-wrap break-words text-gray-400"
                 aria-hidden="true"
               >
-                <span className="invisible">{formData.content + " "}</span>
+               <div className="px-3 py-2">
+                 <span className="invisible">{formData.content + " "}</span>
                 <span className="">{nextSuggestedContentWord}</span>
+               </div>
               </div>
             </div>
           </div>
