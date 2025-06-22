@@ -38,9 +38,9 @@ const StarField = () => {
       </div>
       
       {/* Shooting stars */}
-      <div className="absolute inset-0">
+      {/* <div className="absolute inset-0">
         {generateStars(5, 'shooting-star')}
-      </div>
+      </div> */}
     </div>
   );
 };

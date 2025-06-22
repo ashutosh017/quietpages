@@ -113,9 +113,7 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* shooting star */
-
-
+/* Star field animations */
 @keyframes twinkle {
   0%, 100% {
     opacity: 0.3;
@@ -136,23 +134,6 @@
   }
 }
 
-@keyframes shooting {
-  0% {
-    transform: translateX(-100px) translateY(100px);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(100vw) translateY(-100px);
-    opacity: 0;
-  }
-}
-
 @keyframes fade-in {
   0% {
     opacity: 0;
@@ -170,7 +151,7 @@
   height: 2px;
   background: #64748b;
   border-radius: 50%;
-  animation: twinkle 2s infinite ease-in-out, move 8s infinite linear;
+  animation: twinkle 4s infinite ease-in-out, move 20s infinite linear;
 }
 
 .dark .star-small {
@@ -183,7 +164,7 @@
   height: 3px;
   background: #475569;
   border-radius: 50%;
-  animation: twinkle 3s infinite ease-in-out, move 12s infinite linear;
+  animation: twinkle 6s infinite ease-in-out, move 30s infinite linear;
   box-shadow: 0 0 6px #475569;
 }
 
@@ -198,7 +179,7 @@
   height: 4px;
   background: #334155;
   border-radius: 50%;
-  animation: twinkle 4s infinite ease-in-out, move 15s infinite linear;
+  animation: twinkle 8s infinite ease-in-out, move 40s infinite linear;
   box-shadow: 0 0 10px #334155;
 }
 
@@ -207,40 +188,6 @@
   box-shadow: 0 0 10px #e5e7eb;
 }
 
-.shooting-star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: #1e293b;
-  border-radius: 50%;
-  animation: shooting 3s infinite ease-out;
-  box-shadow: 0 0 0 4px rgba(30, 41, 59, 0.1), 0 0 0 8px rgba(30, 41, 59, 0.1), 0 0 20px #1e293b;
-}
-
-.dark .shooting-star {
-  background: white;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1), 0 0 0 8px rgba(255, 255, 255, 0.1), 0 0 20px white;
-}
-
-.shooting-star::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  right: 0;
-  width: 50px;
-  height: 1px;
-  background: linear-gradient(90deg, #1e293b, transparent);
-  transform: translateY(-50%);
-}
-
-.dark .shooting-star::before {
-  background: linear-gradient(90deg, white, transparent);
-}
-
 .animate-fade-in {
   animation: fade-in 1s ease-out;
 }
-
-
-
-

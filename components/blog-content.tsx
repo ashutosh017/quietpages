@@ -193,7 +193,7 @@ export default function BlogContent({ blog }: { blog: Blog }) {
         isOpen={showShareDialog}
         onClose={() => setShowShareDialog(false)}
         title={blog.title}
-        slug={blog.title}
+        id={blog.id}
       />
     </div>
   );

@@ -125,13 +125,13 @@ export default function Home() {
   return (
     <div>
       <div className=" text-black/80 dark:text-white/90 min-h-screen flex flex-col items-center justify-center text-center ">
-        <h1 className="text-5xl lg:text-9xl font-extrabold lg:px-32 drop-shadow-[0_3px_3px_rgba(0,0,0,0.4)] dark:drop-shadow-[0_3px_3px_rgba(255,255,255,0.25)]">
-          Welcome, to
-          <p className="">QuietPages</p>
+        <h1 className="text-5xl lg:text-8xl font-extrabold lg:px-32 drop-shadow-[0_3px_3px_rgba(0,0,0,0.4)] dark:drop-shadow-[0_3px_3px_rgba(255,255,255,0.25)]">
+          Welcome to QuietPages
         </h1>
 
-        <div className="flex text-muted-foreground tracking-widest py-4 lg:py-8 text-lg lg:text-xl space-x-2 items-center lg:space-x-8 ">
-          Write, Share, Blogs.
+        <div className="flex text-muted-foreground py-4 lg:py-8 text-lg lg:text-lg text-center ">
+          {/* Write, Share, Blogs. */}
+          An AI Powered Platform for Writing, Sharing, Blogs with your friends and family.
         </div>
         <div className="flex flex-col lg:flex-row gap-5 ">
           <Button
@@ -141,8 +141,8 @@ export default function Home() {
             className={cn(
               "bg-neutral-800 text-neutral-50",
               "hover:bg-neutral-700 hover:text-neutral-50",
-              "dark:bg-neutral-100 dark:text-neutral-900",
-              "dark:hover:bg-neutral-300 ",
+              "dark:bg-neutral-200 dark:text-neutral-900",
+              "dark:hover:bg-neutral-50 ",
               "home-btn-style"
             )}
             variant={"outline"}
@@ -152,7 +152,7 @@ export default function Home() {
 
           <Button
             onClick={() => router.push("/blogs")}
-            className={cn("home-btn-style")}
+            className={cn("home-btn-style", "dark:bg-neutral-900 dark:hover:bg-neutral-800")}
             variant={"outline"}
           >
             Explore blogs

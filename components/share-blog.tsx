@@ -15,14 +15,14 @@ interface ShareBlogProps {
   isOpen: boolean
   onClose: () => void
   title: string
-  slug: string
+  id: string
 }
 
 interface SocialPlatform {
   name: string
   icon: React.ReactNode
   color: string
-  getShareUrl: (url: string, title: string) => string
+  getShareUrl: (url: string, id: string) => string
 }
 
 const socialPlatforms: SocialPlatform[] = [
@@ -87,12 +87,12 @@ const socialPlatforms: SocialPlatform[] = [
   },
 ]
 
-export function ShareBlog({ isOpen, onClose, title, slug }: ShareBlogProps) {
+export function ShareBlog({ isOpen, onClose, title, id }: ShareBlogProps) {
   const [copied, setCopied] = useState(false)
 //   const { toast } = useToast()
 
   // In a real app, this would be the actual domain
-  const blogUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/blog/${slug}`
+  const blogUrl = `${typeof window !== "undefined" ? window.location.origin : ""}/blog/${id}`
 
   const copyToClipboard = async () => {
     try {
@@ -110,7 +110,7 @@ export function ShareBlog({ isOpen, onClose, title, slug }: ShareBlogProps) {
   }
 
   const handleSocialShare = (platform: SocialPlatform) => {
-    const shareUrl = platform.getShareUrl(blogUrl, title)
+    const shareUrl = platform.getShareUrl(blogUrl, id)
     window.open(shareUrl, "_blank", "width=600,height=400")
   }
 
