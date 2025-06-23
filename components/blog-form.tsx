@@ -22,7 +22,7 @@ import {
   deleteImageFromCloudinary,
   generateBlogTitle,
   guessTheNextWord,
-} from "@/actions";
+} from "@/lib/actions";
 import { useUser } from "@clerk/nextjs";
 import { useDebounce } from "@/hooks/UseDebounce";
 import { cloudinaryCloudName, cloudinaryPreset } from "@/config";
@@ -124,7 +124,7 @@ export function BlogForm({
       if (nextSuggestedContentWord && inFocus === "textarea") {
         setFormData((prev) => ({
           ...prev,
-          content: formData.content + " " + nextSuggestedContentWord,
+          content: formData.content + nextSuggestedContentWord,
         }));
         setNextSuggestedContentWord("");
       }
@@ -247,6 +247,16 @@ export function BlogForm({
                   </div>
                 </div>
               )}
+              {!aiIsThinkingTitle && suggestion && (
+                <div>
+                <p className="hidden lg:block text-gray-400 italic text-sm">
+                  Press &apos;Tab&apos; to accept the suggestion.
+                </p>
+                <p className=" lg:hidden text-gray-400 italic text-sm">
+                     Tap suggestion to accept.
+                </p>
+                </div>
+              )}
             </div>
 
             <Input
@@ -260,9 +270,18 @@ export function BlogForm({
               autoComplete="off"
               className="px-3 py-2 "
             />
-            <div className="relative inset-0 text-muted-foreground pointer-events-none w-full h-full px-3 py-2 font-medium whitespace-nowrap overflow-hidden">
+            <div
+              onClick={() => {
+                setFormData((prev) => ({
+                  ...prev,
+                  title: suggestion,
+                }));
+                setSuggestion("");
+              }}
+              className="relative inset-0 text-muted-foreground  w-full h-full px-3 py-2 font-medium "
+            >
               {suggestion && (
-                <span className="text-gray-400  lg:text-sm">{suggestion}</span>
+                <span className="text-gray-400   lg:text-sm">{suggestion}</span>
               )}
             </div>
           </div>
@@ -286,10 +305,39 @@ export function BlogForm({
                   </div>
                 </div>
               )}
+              {!aiIsThinkingContent && nextSuggestedContentWord && (
+                <div>
+                  <p className="hidden lg:block text-gray-400 italic text-sm">
+                    Press &apos;Tab&apos; to accept the suggestion.
+                  </p>
+                  <div className="flex gap-1 lg:hidden ">
+                    <p className="text-sm text-gray-400 italic">AI Suggestion: </p>
+                    <button
+                      onClick={() => {
+                        setFormData((prev) => ({
+                          ...prev,
+                          content: formData.content + nextSuggestedContentWord,
+                        }));
+                        setNextSuggestedContentWord("");
+                      }}
+                      className="text-sm px-2 py-0 "
+                    >
+                      Accept
+                    </button>
+                    <button
+                    onClick={() => {
+                        setNextSuggestedContentWord("");
+                      }}
+                      className="text-sm px-2 py-0 "
+                    >
+                      Reject
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="relative">
-              {/* User Input */}
               <Textarea
                 onFocus={() => setInFocus("textarea")}
                 id="content"
@@ -306,10 +354,10 @@ export function BlogForm({
                 className="absolute inset-0 w-full min-h-[200px]  md:text-sm leading-[1.5] box-border pointer-events-none z-0 whitespace-pre-wrap break-words text-gray-400"
                 aria-hidden="true"
               >
-               <div className="px-3 py-2">
-                 <span className="invisible">{formData.content + " "}</span>
-                <span className="">{nextSuggestedContentWord}</span>
-               </div>
+                <div className="px-3 py-2">
+                  <span className="invisible">{formData.content + " "}</span>
+                  <span className="">{nextSuggestedContentWord}</span>
+                </div>
               </div>
             </div>
           </div>

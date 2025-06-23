@@ -23,7 +23,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@clerk/nextjs";
 import { BlogForm } from "@/components/blog-form";
-import { handleCreateBlog } from "@/actions";
+import { handleCreateBlog } from "@/lib/actions";
 import AuthRequiredPopUp from "@/components/auth-required-popup";
 import { useCallback, useMemo, useState } from "react";
 import { Blog } from "@/lib/generated/prisma";
@@ -105,7 +105,7 @@ export default function BlogsPage({ blogs }: { blogs: Blog[] }) {
 
   console.log("lastPage: ", lastPage);
   return (
-    <div className="container min-h-screen mx-auto px-4 py-18 lg:py-24 max-w-3xl">
+    <div className="container min-h-screen mx-auto px-4 py-18 lg:py-24 max-w-4xl">
       <div className="mb-6 flex w-full items-center justify-between mx-auto">
         <Button
           onClick={() => {

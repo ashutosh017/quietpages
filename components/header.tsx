@@ -1,5 +1,5 @@
 "use client";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaMoneyBill } from "react-icons/fa";
 import { FaSquareXTwitter } from "react-icons/fa6";
 import { FaLinkedin } from "react-icons/fa";
 import { FaYoutube } from "react-icons/fa";
@@ -16,8 +16,9 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BlogForm } from "./blog-form";
-import { handleCreateBlog } from "@/actions";
+import { handleCreateBlog } from "@/lib/actions";
 import {
+  DollarSign,
   Home,
   Layers,
   Layers2,
@@ -42,6 +43,11 @@ export default function Header() {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [showSigninRequired, setShowSigninRequired] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
     console.log("toggle menu called");
@@ -65,7 +71,7 @@ export default function Header() {
               QuietPages
             </h1>
           </Link>
-          <nav className="hidden top-4 left-1/2  lg:flex items-center justify-between px-6 py-2  w-fit rounded-4xl  dark:bg-background/90 border dark:border-neutral-400 bg-neutral-50 border-neutral-600 shadow-lg    dark:shadow-white/10  gap-2">
+          <nav className="hidden top-4 left-1/2  lg:flex items-center justify-between px-6 py-2  w-fit rounded-4xl  dark:bg-background/90 border dark:border-neutral-400 bg-neutral-50 border-neutral-600 shadow-lg    dark:shadow-white/10  gap-1">
             <Button
               variant="ghost"
               className={`nav-btn-style ${
@@ -79,6 +85,19 @@ export default function Header() {
             >
               Home
             </Button>
+            {/* <Button
+              variant="ghost"
+              className={`nav-btn-style ${
+                pathname === "/about"
+                  ? "text-black dark:text-white"
+                  : "text-black/60 dark:text-white/60"
+              }`}
+              onClick={() => {
+                router.push("/about", { scroll: false });
+              }}
+            >
+              About
+            </Button> */}
             <Button
               variant="ghost"
               className={`nav-btn-style  ${
@@ -105,7 +124,21 @@ export default function Header() {
             >
               My Blogs
             </Button>
+          
             <Button
+              onClick={() => {
+               router.push("/pricing")
+              }}
+              variant="ghost"
+              className={`nav-btn-style  ${
+                pathname === "/pricing"
+                  ? "text-black dark:text-white"
+                  : "text-black/60 dark:text-white/60"
+              }`}
+            >
+              Pricing
+            </Button>
+              <Button
               onClick={() => {
                 isSignedIn
                   ? setShowBlogForm(true)
@@ -148,7 +181,7 @@ export default function Header() {
               variant={"ghost"}
               asChild
             >
-              {theme === "light" ? (
+              {mounted && theme === "dark" ? (
                 <Moon className="w-6 h-6" />
               ) : (
                 <Sun className="w-6 h-6" />
@@ -212,6 +245,23 @@ export default function Header() {
               <div className="flex justify-end gap-2">
                 My Blogs
                 <Layers2 />
+              </div>
+            </Button>
+            <Button
+              onClick={() => {
+                router.push("/pricing", { scroll: false });
+                setIsMenuOpen(false);
+              }}
+              variant="ghost"
+              className={`nav-btn-style  ${
+                pathname === "/pricing"
+                  ? "text-black dark:text-white"
+                  : "text-black/60 dark:text-white/60"
+              }`}
+            >
+              <div className="flex justify-end gap-2">
+                Pricing
+                <DollarSign />
               </div>
             </Button>
             <Button

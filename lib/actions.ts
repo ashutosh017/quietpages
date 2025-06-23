@@ -5,12 +5,12 @@ import {
   cloudinaryApiKey,
   cloudinaryApiSecret,
   cloudinaryCloudName,
-} from "./config";
-import { Blog, Mode } from "./types";
+} from "../config";
+import { Blog, Mode } from "../types";
 import crypto from "crypto";
-import { prisma } from "./lib/prisma";
-import { ai } from "./lib/gemini";
-  const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
+import { prisma } from "./prisma";
+import { ai } from "./gemini";
+const model = ai.getGenerativeModel({ model: "gemini-2.5-flash" });
 export const handleCreateBlog = async (
   blog: Omit<Blog, "id" | "dateCreated">,
   mode: Mode
@@ -158,27 +158,40 @@ export const deleteImageFromCloudinary = async (
     console.error("Cloudinary deletion failed", error.response?.data || error);
   }
 };
-
-
 export const generateBlogTitle = async (query: string) => {
-  const prompt = `Rewrite or complete this blog title. Respond with the improved title only. Input: ${query}`;
-  const stream = await model.generateContentStream([{ text: prompt }]);
-
-  let full = "";
-  for await (const chunk of stream.stream) {
-    full += chunk.text();
-  }
-  return full.trim();
+  const resp = await model.generateContent(
+    "hey I will give you blog title you have to give me a better title or if the title I give you is incomplete then you have to give me complete version of it, and only response back with the title and do not give me any other text. query title: " +
+      query
+  );
+  return resp.response.text();
 };
 
 export const guessTheNextWord = async (query: string) => {
-  const prompt = `Predict the next word(s) of this paragraph. Reply with only the continuation. Input: ${query}`;
-  const stream = await model.generateContentStream([{ text: prompt }]);
-
-  let full = "";
-  for await (const chunk of stream.stream) {
-    full += chunk.text();
-  }
-  return full.trim();
+  const resp = await model.generateContent(
+    "hey I will give you paragraph and you have to predict the next word or next few words for it. If the last word of the paragraph is incomplete then you have to return the remaining part of the word along with few more words if you want also if you are starting your response with a new word add a space before it. And do not add any other text in the response. query paragraph: " +
+      query
+  );
+  return resp.response.text();
 };
 
+// export const generateBlogTitle = async (query: string) => {
+//   const prompt = `Rewrite or complete this blog title. Respond with the improved title only. Input: ${query}`;
+//   const stream = await model.generateContentStream([{ text: prompt }]);
+
+//   let full = "";
+//   for await (const chunk of stream.stream) {
+//     full += chunk.text();
+//   }
+//   return full.trim();
+// };
+
+// export const guessTheNextWord = async (query: string) => {
+//   const prompt = `Predict the next word(s) of this paragraph. Reply with only the continuation. Input: ${query}`;
+//   const stream = await model.generateContentStream([{ text: prompt }]);
+
+//   let full = "";
+//   for await (const chunk of stream.stream) {
+//     full += chunk.text();
+//   }
+//   return full.trim();
+// };

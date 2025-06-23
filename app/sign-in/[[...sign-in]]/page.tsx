@@ -10,7 +10,7 @@ export default function Page() {
 
   return (
     <div className="flex items-center py-24 flex-col min-h-screen w-screen">
-      <div className="flex items-start justify-between mb-8 max-w-3xl  w-full mx-auto px-8  ">
+      <div className="flex items-start justify-between mb-8 max-w-4xl  w-full mx-auto px-8  ">
         <Button
           onClick={() => {
             window.history.back();

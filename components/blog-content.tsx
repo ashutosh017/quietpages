@@ -24,7 +24,7 @@ import { ImageLightbox } from "@/components/image-ligtbox";
 import { DeleteConfirmation } from "./delete-confirmation";
 import { BlogForm } from "./blog-form";
 import { useAuth, useUser } from "@clerk/nextjs";
-import { handleDeleteBlog, handleUpdateBlog } from "@/actions";
+import { handleDeleteBlog, handleUpdateBlog } from "@/lib/actions";
 
 import Linkify from "linkify-react";
 import { ShareBlog } from "./share-blog";

@@ -30,7 +30,7 @@ export function BlogCardSkeleton() {
 
 export function BlogListSkeleton() {
   return (
-    <div className="space-y-6 max-w-3xl px-4 mx-auto">
+    <div className="space-y-6 max-w-4xl px-4 mx-auto">
       <div className="flex justify-between items-center">
         <Skeleton className="w-16 h-5"></Skeleton>
         <Skeleton className="w-32 h-10 "></Skeleton>
@@ -47,7 +47,7 @@ export function BlogListSkeleton() {
 
 export function BlogPageSkeleton() {
   return (
-    <div className="container mx-auto px-4 py-12 max-w-3xl">
+    <div className="container mx-auto px-4 py-12 max-w-4xl">
       <div className="mb-8">
         <Skeleton className="h-9 w-20 mb-8" />
         <Skeleton className="h-8 w-3/4 mb-6" />
