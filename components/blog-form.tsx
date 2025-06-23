@@ -43,8 +43,10 @@ export function BlogForm({
   const [aiIsThinkingContent, setAiIsThinkingContent] = useState(false);
   const [suggestion, setSuggestion] = useState("");
   const [inFocus, setInFocus] = useState("");
-  const debouncedValue = useDebounce(formData.title, 1000);
+  const debouncedTitleValue = useDebounce(formData.title, 1000);
   const debouncedContentValue = useDebounce(formData.content, 1000);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const isPending = useRef(false);
   const isPendingForContent = useRef(false);
   const nextToExecuteRef = useRef("");
@@ -80,14 +82,15 @@ export function BlogForm({
     })();
   }, [debouncedContentValue]);
   useEffect(() => {
-    if (!debouncedValue.trim()) {
+    if (!debouncedTitleValue.trim()) {
       setSuggestion("");
       return;
     }
-    nextToExecuteRef.current = debouncedValue;
+    nextToExecuteRef.current = debouncedTitleValue;
     if (
       isPending.current ||
-      lastExecutedValue.current === nextToExecuteRef.current
+      lastExecutedValue.current === nextToExecuteRef.current ||
+      lastResolvedValue.current === nextToExecuteRef.current
     )
       return;
     (async () => {
@@ -97,7 +100,7 @@ export function BlogForm({
         lastExecutedValue.current = nextToExecuteRef.current;
         const result = await generateBlogTitle(nextToExecuteRef.current);
         lastResolvedValue.current = result;
-        if (debouncedValue === lastExecutedValue.current)
+        if (debouncedTitleValue === lastExecutedValue.current)
           setSuggestion(result || "");
       } catch (err) {
         console.log(err);
@@ -106,7 +109,7 @@ export function BlogForm({
         setAiIsThinkingTitle(false);
       }
     })();
-  }, [debouncedValue, lastResolvedValue.current]);
+  }, [debouncedTitleValue, lastResolvedValue.current]);
 
   const { user } = useUser();
   const handleKeyDown = (
@@ -249,17 +252,18 @@ export function BlogForm({
               )}
               {!aiIsThinkingTitle && suggestion && (
                 <div>
-                <p className="hidden lg:block text-gray-400 italic text-sm">
-                  Press &apos;Tab&apos; to accept the suggestion.
-                </p>
-                <p className=" lg:hidden text-gray-400 italic text-sm">
-                     Tap suggestion to accept.
-                </p>
+                  <p className="hidden lg:block text-gray-400 italic text-sm">
+                    Press &apos;Tab&apos; to accept the suggestion.
+                  </p>
+                  <p className=" lg:hidden text-gray-400 italic text-sm">
+                    Tap suggestion to accept.
+                  </p>
                 </div>
               )}
             </div>
 
             <Input
+              ref={inputRef}
               id="title"
               value={formData.title}
               onFocus={() => setInFocus("input")}
@@ -276,6 +280,7 @@ export function BlogForm({
                   ...prev,
                   title: suggestion,
                 }));
+                inputRef.current?.focus();
                 setSuggestion("");
               }}
               className="relative inset-0 text-muted-foreground  w-full h-full px-3 py-2 font-medium "
@@ -311,13 +316,16 @@ export function BlogForm({
                     Press &apos;Tab&apos; to accept the suggestion.
                   </p>
                   <div className="flex gap-1 lg:hidden ">
-                    <p className="text-sm text-gray-400 italic">AI Suggestion: </p>
+                    <p className="text-sm text-gray-400 italic">
+                      AI Suggestion:{" "}
+                    </p>
                     <button
                       onClick={() => {
                         setFormData((prev) => ({
                           ...prev,
                           content: formData.content + nextSuggestedContentWord,
                         }));
+                        textAreaRef.current?.focus();
                         setNextSuggestedContentWord("");
                       }}
                       className="text-sm px-2 py-0 "
@@ -325,7 +333,7 @@ export function BlogForm({
                       Accept
                     </button>
                     <button
-                    onClick={() => {
+                      onClick={() => {
                         setNextSuggestedContentWord("");
                       }}
                       className="text-sm px-2 py-0 "
@@ -340,6 +348,7 @@ export function BlogForm({
             <div className="relative">
               <Textarea
                 onFocus={() => setInFocus("textarea")}
+                ref={textAreaRef}
                 id="content"
                 value={formData.content}
                 onChange={(e) => handleChange("content", e.target.value)}
