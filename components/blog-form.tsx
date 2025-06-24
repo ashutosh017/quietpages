@@ -56,7 +56,10 @@ export function BlogForm({
   const lastExecutedValue = useRef("");
   const lastExecutedValueForContent = useRef("");
   useEffect(() => {
-    if (!debouncedContentValue) return;
+    if (!debouncedContentValue) {
+      setNextSuggestedContentWord("");
+      return;
+    }
     nextToExecuteRefForContent.current = debouncedContentValue;
     if (
       isPendingForContent.current ||
