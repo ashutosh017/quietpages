@@ -4,30 +4,20 @@ import { handleCreateBlog } from "@/lib/actions";
 import AuthRequiredPopUp from "@/components/auth-required-popup";
 import { BlogForm } from "@/components/blog-form";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { razorpay_key_id } from "@/config";
+
 import { cn } from "@/lib/utils";
 import { useAuth } from "@clerk/nextjs";
-import axios from "axios";
-import { ArrowRight, Badge, Check, Crown, Zap } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useRazorpay } from "react-razorpay";
-
+import AIFeaturesShowcase from "@/components/ai-features-showcase";
+import { AIFeaturesDemo } from "@/components/ai-features-demo";
 
 export default function Home() {
   const router = useRouter();
   const [showBlogForm, setShowBlogForm] = useState(false);
   const { isSignedIn } = useAuth();
-  const [showSigninPopup, setshowSigninPopup] = useState(false)
-  
+  const [showSigninPopup, setshowSigninPopup] = useState(false);
+
   return (
     <div>
       <div className=" text-black/80 dark:text-white/90 min-h-screen flex flex-col items-center justify-center text-center ">
@@ -37,7 +27,8 @@ export default function Home() {
 
         <div className="flex text-muted-foreground py-4 lg:py-8 text-lg lg:text-lg text-center px-14">
           {/* Write, Share, Blogs. */}
-          An AI Powered Platform for Writing, Sharing, Blogs with your friends and family.
+          An AI Powered Platform for Writing, Sharing, Blogs with your friends
+          and family.
         </div>
         <div className="flex flex-col lg:flex-row gap-5 ">
           <Button
@@ -58,16 +49,20 @@ export default function Home() {
 
           <Button
             onClick={() => router.push("/blogs")}
-            className={cn("home-btn-style", "dark:bg-neutral-900 dark:hover:bg-neutral-800")}
+            className={cn(
+              "home-btn-style",
+              "dark:bg-neutral-900 dark:hover:bg-neutral-800"
+            )}
             variant={"outline"}
           >
             Explore blogs
           </Button>
         </div>
       </div>
-      <div>
-     
-      </div>
+           <section className="container pb-32 flex  justify-center  mx-auto ">
+        <AIFeaturesDemo />
+      </section>
+      {/* <AIFeaturesShowcase /> */}
       <BlogForm
         onClose={() => setShowBlogForm(false)}
         onSave={handleCreateBlog}
@@ -77,10 +72,10 @@ export default function Home() {
           blogId: null,
         }}
       />
-        <AuthRequiredPopUp
-              isOpen={showSigninPopup}
-              onClose={() => setshowSigninPopup(false)}
-            />
+      <AuthRequiredPopUp
+        isOpen={showSigninPopup}
+        onClose={() => setshowSigninPopup(false)}
+      />
     </div>
   );
 }
