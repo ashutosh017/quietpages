@@ -59,9 +59,7 @@ export default function Home() {
           </Button>
         </div>
       </div>
-           <section className="container pb-32 flex  justify-center  mx-auto ">
-        <AIFeaturesDemo />
-      </section>
+      <AIFeaturesDemo />
       {/* <AIFeaturesShowcase /> */}
       <BlogForm
         onClose={() => setShowBlogForm(false)}

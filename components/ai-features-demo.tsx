@@ -126,7 +126,7 @@ export function AIFeaturesDemo() {
   };
 
   return (
-    <div className="  gap-12 lg:px-36 px-4 py-4  flex lg:justify-between flex-col lg:flex-row">
+    <div className=" mx-auto max-w-6xl flex max-h-screen min-h-1/2 mb-12 lg:mb-24 px-4 items-center flex-col lg:flex-row gap-16  ">
       {/* Left side - Features description */}
       <div className="">
         <div>
@@ -171,8 +171,8 @@ export function AIFeaturesDemo() {
       </div>
 
       {/* Right side - Animated demo */}
-      <div className="relative  h-fit">
-        <div className="bg-white dark:bg-black/40 max-w-lg lg:w-lg backdrop-blur-xl border dark:border-neutral-300 rounded-lg p-6 shadow-lg">
+      <div className="relative      max-w-lg w-full">
+        <div className="bg-white h-full dark:bg-black/40 lg:min-w-lg backdrop-blur-xl border dark:border-neutral-300 rounded-lg p-6 shadow-lg">
           <div className="space-y-6">
             {/* Title section */}
             <div className="space-y-2 relative">
@@ -216,7 +216,7 @@ export function AIFeaturesDemo() {
               />
               {state.titleSuggestion && (
                 <div className=" animate-in slide-in-from-top-2 duration-300">
-                  <div className="flex items-center gap-2 text-sm ml-2 mt-2">
+                  <div className="flex items-center text-gray-400 gap-2 text-sm ml-2 mt-2">
                     <span>{state.titleSuggestion}</span>
                   </div>
                 </div>
