@@ -11,6 +11,9 @@ export default async function MyBlogs(){
   const blogs = await prisma.blog.findMany({
     where:{
       userId:user?.id
+    },
+    orderBy:{
+      dateCreated:"desc"
     }
   })
   console.log("my blogs: ",blogs)

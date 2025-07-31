@@ -1,5 +1,4 @@
 import BlogsPage from "@/components/blogs-page";
-import { Input } from "@/components/ui/input";
 import { prisma } from "@/lib/prisma";
 
 export const revalidate = 60;
